@@ -1,5 +1,5 @@
-#Future Imperfect
-###Node.js Blog Website
+#My Blog
+###The Blog for Tony Spiro Built using Node.js and Cosmic JS
 #####[View a demo here](http://future-imperfect.cosmicapp.co/)
 [Sign up for Cosmic JS](https://cosmicjs.com/) to start managing content for your websites and applications faster and easier.
 The frontend is from [html5up.net](html5up.net) and is made dynamic with mustache `{{ }}` braces with content from the [Cosmic JS Client for JavaScript](https://www.npmjs.com/package/cosmicjs).
