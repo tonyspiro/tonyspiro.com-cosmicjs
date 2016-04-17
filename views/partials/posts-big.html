@@ -8,10 +8,16 @@
       </div>
       <div class="meta">
         <time class="published" datetime="2015-11-01">{{ created_friendly }}</time>
-        <a href="#" class="author"><span class="name">{{ metafield.author.object.title }}</span><img src="https://cosmicjs.com/uploads/{{ metafield.author.object.metafields.0.value }}" alt="" /></a>
+        <a href="#" class="author"><span class="name">{{ metafield.author.object.title }}</span>
+          <img src="https://cosmicjs.com/uploads/{{ metafield.author.object.metafields.0.value }}" alt="" />
+        </a>
       </div>
     </header>
-    <a href="/{{ slug }}" class="image featured"><img src="https://cosmicjs.com/uploads/{{{ metafield.hero.value }}}" alt="" /></a>
+    {{# metafield.hero.value }}
+    <a href="/{{ slug }}" class="image featured">
+      <img src="https://cosmicjs.com/uploads/{{ metafield.hero.value }}" alt="" />
+    </a>
+    {{/ metafield.hero.value }}
     {{{ metafield.teaser.value }}}
     <footer>
       <ul class="actions">

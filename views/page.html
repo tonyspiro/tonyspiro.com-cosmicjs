@@ -11,17 +11,13 @@
       </header>
     </section>
     <!-- Content -->
-    <section id="content" style="max-width:1000px; margin: 0 auto">
+    <section id="content" style="max-width:1000px; margin: 0 auto 60px auto">
       {{# post.metafield.hero.value }}
         <img style="max-width:100%; margin-bottom: 20px" src="https://cosmicjs.com/uploads/{{ post.metafield.hero.value }}" alt="" />
       {{/ post.metafield.hero.value }}
       {{{ page.content }}}
     </section>
     <!-- Pagination -->
-    <ul class="actions pagination">
-      <li><a href="" class="disabled button big previous">Previous Page</a></li>
-      <li><a href="#" class="button big next">Next Page</a></li>
-    </ul>
     {{> posts-mini }}
   </div>
   {{> sidebar }}

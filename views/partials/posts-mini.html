@@ -7,9 +7,15 @@
         <header>
           <h3><a href="/{{ slug }}">{{ title }}</a></h3>
           <time class="published">{{ created_friendly }}</time>
-          <a href="#" class="author"><img src="https://cosmicjs.com/uploads/{{ metafield.author.object.metafields.0.value }}" alt="" /></a>
+          <a href="#" class="author">
+            <img src="https://cosmicjs.com/uploads/{{ metafield.author.object.metafields.0.value }}" alt="" />
+          </a>
         </header>
-        <a href="/{{ slug }}" class="image"><img src="https://cosmicjs.com/uploads/{{{ metafield.hero.value }}}" alt="" /></a>
+        {{# metafield.hero.value }}
+          <a href="/{{ slug }}" class="image">
+            <img src="https://cosmicjs.com/uploads/{{ metafield.hero.value }}" alt="" />
+          </a>
+        {{/ metafield.hero.value }}
       </article>
     {{/ cosmic.objects.type.posts }}
   </div>
