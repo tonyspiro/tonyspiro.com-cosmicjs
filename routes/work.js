@@ -10,13 +10,23 @@ module.exports = (app, config, partials) => {
       res.locals.cosmic = response
       const posts = response.objects.type.posts
       // Pagination
-      const offset = 0
+      let page = 1
+      if (req.query.page)
+        page = Number(req.query.page)
       const per_page = 5
-      const current_posts= posts.slice(offset, offset + per_page)
+      const offset = (page - 1) * per_page
+      const current_posts = posts.slice(offset, offset + per_page)
+      // Sort
+      const sorted_posts = current_posts.sort(post => {
+        if (post.metafield.published)
+          return moment(post.metafield.published.value).format('YYYMMDD') * -1
+      })
       // Friendly dates
-      const friendly_date_posts = current_posts.map(post => {
-        const created_friendly = moment(post.created).format('MMMM Do, YYYY')
-        post.created_friendly = created_friendly
+      const friendly_date_posts = sorted_posts.map(post => {
+        let published_friendly = 0
+        if (post.metafield.published)
+          published_friendly = moment(post.metafield.published.value).format('MMMM Do, YYYY')
+        post.published_friendly = published_friendly
         return post
       })
       res.locals.cosmic.objects.type.posts = friendly_date_posts
