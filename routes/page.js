@@ -8,9 +8,13 @@ module.exports = (app, config, partials) => {
       return res.end()
     Cosmic.getObjects({ bucket: { slug: config.COSMIC_BUCKET } }, (err, response) => {
       res.locals.cosmic = response
-      // Friendly dates
       const posts = response.objects.type.posts
-      const friendly_date_posts = posts.map(post => {
+      // Pagination
+      const offset = 0
+      const per_page = 5
+      const current_posts= posts.slice(offset, offset + per_page)
+      // Friendly dates
+      const friendly_date_posts = current_posts.map(post => {
         const created_friendly = moment(post.created).format('MMMM Do, YYYY')
         post.created_friendly = created_friendly
         return post
@@ -23,6 +27,12 @@ module.exports = (app, config, partials) => {
       })
       if (!res.locals.page) {
         return res.render('404.html', {
+          partials
+        })  
+      }
+      if (req.url === '/work') {
+        partials['work-big'] = 'partials/work-big'
+        return res.render('work.html', {
           partials
         })  
       }

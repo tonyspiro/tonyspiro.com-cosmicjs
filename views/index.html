@@ -5,8 +5,8 @@
     {{> posts-big }}
     <!-- Pagination -->
     <ul class="actions pagination">
-      <li><a href="" class="disabled button big previous">Previous Page</a></li>
-      <li><a href="#" class="button big next">Next Page</a></li>
+      <li><a href="?page={{ prev_page }}" class="{{# prev_disabled }}disabled{{/ prev_disabled }} button big previous">Previous Page</a></li>
+      <li><a href="?page={{ next_page }}" class="{{# next_disabled }}disabled{{/ next_disabled }} button big next">Next Page</a></li>
     </ul>
   </div>
   {{> sidebar }}

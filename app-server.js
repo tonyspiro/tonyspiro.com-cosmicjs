@@ -22,7 +22,8 @@ const partials = {
   'posts-list': 'partials/posts-list',
 }
 require('./routes/home')(app, config, partials)
-require('./routes/pages')(app, config, partials)
+require('./routes/work')(app, config, partials)
+require('./routes/page')(app, config, partials)
 require('./routes/404')(app, config, partials)
 const http = http_module.Server(app)
 http.listen(app.get('port'), () => {

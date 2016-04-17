@@ -4,7 +4,8 @@
   "description": "Future Imperfect by HTML5 UP\r html5up.net | @n33co\r Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "development": "COSMIC_BUCKET=tonyspiro PORT=5000 nodemon app.js -e js,html"
   },
   "author": "",
   "license": "ISC",

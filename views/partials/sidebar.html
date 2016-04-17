@@ -3,12 +3,14 @@
 
   <!-- Intro -->
   <section id="intro">
-    <a target="_blank" href="{{ cosmic.object.header.metafield.logo-link.value }}" class="logo">
-      <img src="https://cosmicjs.com/uploads/{{ cosmic.object.header.metafield.logo.value }}" alt="" />
-    </a>
-    <header>
+    <div style="height: 76px" class="shorti w-100p">
+      <a class="logo" target="_blank" href="{{ cosmic.object.header.metafield.logo-link.value }}">
+        <img style="display: none" class="shorti w-76 br-200 center-block" src="https://cosmicjs.com/uploads/{{ cosmic.object.header.metafield.logo.value }}" alt="" />
+      </a>
+    </div>
+    <header class="shorti text-center">
       <a href="/">
-        <h2>
+        <h2 class="shorti mb-0">
           {{ cosmic.object.header.metafield.site-title.value }}
         </h2>
       </a>
@@ -19,13 +21,10 @@
   <!-- Mini Posts -->
   {{> posts-mini }}
 
-  <!-- Posts List -->
-  {{> posts-list }}
-
   <!-- About -->
   <section class="blurb">
     <h2>{{ cosmic.object.about.title }}</h2>
-    <p>{{{ cosmic.object.about.content }}}</p>
+    <p>{{{ cosmic.object.about.metafield.excerpt.value }}}</p>
     <ul class="actions">
       <li><a href="/about" class="button">Learn More</a></li>
     </ul>
@@ -34,12 +33,14 @@
   <!-- Footer -->
   <section id="footer">
     <ul class="icons">
-      <li><a href="{{ cosmic.object.contact-info.metafield.twitter.value }}" class="fa-twitter"><span class="label">Twitter</span></a></li>
-      <li><a href="{{ cosmic.object.contact-info.metafield.facebook.value }}" class="fa-facebook"><span class="label">Facebook</span></a></li>
-      <li><a href="{{ cosmic.object.contact-info.metafield.instagram.value }}" class="fa-instagram"><span class="label">Instagram</span></a></li>
-      <li><a href="{{ cosmic.object.conta ct-info.metafield.rss.value }}" class="fa-rss"><span class="label">RSS</span></a></li>
-      <li><a href="{{ cosmic.object.contact-info.metafield.email.value }}" class="fa-envelope"><span class="label">Email</span></a></li>
+      <li><a target="_blank" href="{{ cosmic.object.contact-info.metafield.twitter.value }}" class="shorti font-40 fa-twitter"><span class="label">Twitter</span></a></li>
+      <li><a target="_blank" href="{{ cosmic.object.contact-info.metafield.github.value }}" class="shorti font-40 fa-github"><span class="label">GitHub</span></a></li>
+      <li><a href="mailto:{{ cosmic.object.contact-info.metafield.email.value }}" class="shorti font-40 fa-envelope"><span class="label">Email</span></a></li>
     </ul>
-    <p class="copyright">&copy; {{ cosmic.object.nav.metafield.site-title.value }}. Design: <a href="http://html5up.net">HTML5 UP</a>.</p>
+    <p class="copyright shorti font-16">
+      &copy; {{ cosmic.object.nav.metafield.site-title.value }}. <br>
+      Design: <a href="http://html5up.net">HTML5 UP</a>. <br>
+      <a href="https://cosmicjs.com" style="border-bottom: none;">CMS API</a>: <a href="https://cosmicjs.com">Cosmic JS</a>
+    </p>
   </section>
 </section>
