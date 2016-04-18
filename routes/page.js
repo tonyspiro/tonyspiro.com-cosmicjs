@@ -32,7 +32,7 @@ module.exports = (app, config, partials) => {
       objects.forEach(page => {
         if (page.slug === slug) {
           let published_friendly = 0
-          if (page.metafield.published)
+          if (page.metafield && page.metafield.published)
             published_friendly = moment(page.metafield.published.value).format('MMMM Do, YYYY')
           page.published_friendly = published_friendly
           res.locals.page = page
