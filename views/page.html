@@ -16,6 +16,36 @@
         <img style="max-width:100%; margin-bottom: 20px" src="https://cosmicjs.com/uploads/{{ post.metafield.hero.value }}" alt="" />
       {{/ post.metafield.hero.value }}
       {{{ page.content }}}
+      {{# page.is_post }}
+        <div id="disqus_thread"></div>
+        <script>
+          /**
+           *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+           *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+           */
+          
+          var disqus_url = 'http://tonyspiro.com/{{ page.slug }}';
+          {{# page.metafield.wp-id.value }}
+            var disqus_identifier = '{{ page.metafield.wp-id.value }} http://tonyspiro.com/?p={{ page.metafield.wp-id.value }}';
+          {{/ page.metafield.wp-id.value }}
+          {{^ page.metafield.wp-id.value }}
+            var disqus_identifier = '{{ page._id }}';
+          {{/ page.metafield.wp-id.value }}
+          var disqus_config = function () {
+              this.page.url = disqus_url;  // Replace PAGE_URL with your page's canonical URL variable
+              this.page.identifier = disqus_identifier; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+          };
+          (function() {  // REQUIRED CONFIGURATION VARIABLE: EDIT THE SHORTNAME BELOW
+              var d = document, s = d.createElement('script');
+              
+              s.src = '//tonyspiro.disqus.com/embed.js';  // IMPORTANT: Replace EXAMPLE with your forum shortname!
+              
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+          })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+      {{/ page.is_post }}
     </section>
     <!-- Pagination -->
   </div>

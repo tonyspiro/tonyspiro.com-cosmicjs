@@ -1491,11 +1491,11 @@
 
 		a:hover {
 			border-bottom-color: transparent;
-			color: #2ebaae !important;
+			color: #00afd7 !important;
 		}
 
 			a:hover:before {
-				color: #2ebaae !important;
+				color: #00afd7 !important;
 			}
 
 	strong, b {
@@ -1567,7 +1567,7 @@
 
 	code {
 		background: rgba(160, 160, 160, 0.075);
-		border: solid 1px rgba(160, 160, 160, 0.3);
+		// border: solid 1px rgba(160, 160, 160, 0.3);
 		font-family: "Courier New", monospace;
 		font-size: 0.9em;
 		margin: 0 0.25em;
@@ -1732,8 +1732,8 @@
 		input[type="button"]:hover,
 		button:hover,
 		.button:hover {
-			box-shadow: inset 0 0 0 1px #2ebaae;
-			color: #2ebaae !important;
+			box-shadow: inset 0 0 0 1px #00afd7;
+			color: #00afd7 !important;
 		}
 
 			input[type="submit"]:hover:active,
@@ -1912,8 +1912,8 @@
 		input[type="tel"]:focus,
 		select:focus,
 		textarea:focus {
-			border-color: #2ebaae;
-			box-shadow: inset 0 0 0 1px #2ebaae;
+			border-color: #00afd7;
+			box-shadow: inset 0 0 0 1px #00afd7;
 		}
 
 	.select-wrapper {
@@ -2022,8 +2022,8 @@
 
 		input[type="checkbox"]:focus + label:before,
 		input[type="radio"]:focus + label:before {
-			border-color: #2ebaae;
-			box-shadow: 0 0 0 1px #2ebaae;
+			border-color: #00afd7;
+			box-shadow: 0 0 0 1px #00afd7;
 		}
 
 	input[type="radio"] + label:before {
@@ -3387,7 +3387,7 @@
 					}
 
 					#menu .links > li a:hover h3 {
-						color: #2ebaae;
+						color: #00afd7;
 					}
 
 				#menu .links > li:first-child {

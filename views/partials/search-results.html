@@ -1,16 +1,14 @@
 <!-- Post -->
-{{# cosmic.objects.type.work }}
+{{^ results }}
+  <div>No results found</div>
+{{/ results }}
+{{# results }}
   <article class="post">
     <header>
       <div class="title">
         <h2><a href="/{{ slug }}">{{ title }}</a></h2>
         <p>{{ metafield.tag.value }}</p>
         {{{ metafield.excerpt.value }}}
-      </div>
-      <div class="meta">
-        <a style="border-bottom: none" href="/{{ slug }}">
-          <img title="{{ title }}" alt="{{ title }}" style="width: 100%" src="https://cosmicjs.com/uploads/{{ metafield.thumb.value }}" alt="" />
-        </a>
       </div>
     </header>
     <footer>
@@ -19,4 +17,4 @@
       </ul>
     </footer>
   </article>
-{{/ cosmic.objects.type.work }}
+{{/ results }}

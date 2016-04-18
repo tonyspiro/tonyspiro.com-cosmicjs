@@ -12,6 +12,13 @@ app.engine('html', hogan)
 app.set('views', __dirname + '/views')
 app.set('port', process.env.PORT || 3000)
 app.use(express.static(__dirname + '/public'))
+app.use((req, res, next) => {
+  if (req.url === '/favicon.ico')
+    return res.end()
+  // Set global valiables
+  res.locals.year = new Date().getFullYear()
+  next()
+})
 const partials = {
   header: 'partials/header',
   footer: 'partials/footer',
@@ -23,6 +30,7 @@ const partials = {
 }
 require('./routes/home')(app, config, partials)
 require('./routes/work')(app, config, partials)
+require('./routes/search')(app, config, partials)
 require('./routes/page')(app, config, partials)
 require('./routes/404')(app, config, partials)
 const http = http_module.Server(app)

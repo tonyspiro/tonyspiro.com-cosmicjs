@@ -10,9 +10,32 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
-<link rel="stylesheet" href="assets/css/main.css" />
+<link rel="stylesheet" href="/assets/css/prism.css" />
+<link rel="stylesheet" href="/assets/css/main.css" />
 <!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
 <!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+<style id="custom-css-css">p{font-size:15px !important}.text-input,textarea{margin-top:20px;-webkit-border-radius:100px;-moz-border-radius:100px;border-radius:100px;margin-left:-15px;border:1px solid #e7e7e7;border-color:#d1d1d1;text-indent:20px;padding:10px 0;width:60%}textarea{height:150px;-webkit-border-radius:30px;-moz-border-radius:30px;border-radius:30px;padding-top:20px}input[type=submit]{margin-top:20px;padding:10px 20px;-webkit-border-radius:30px;-moz-border-radius:30px;border-radius:30px;background-color:#fff;border:1px solid #d1d1d1;color:#aaa !important}input[type=submit]:hover{background-color:#efefef}.success-msg{padding:10px;color:#468847;background-color:#dff0d8;width:90%}section article.post p,section article.post li{font-size:14px}pre,code,kbd,samp{font-size:14px;width:90%}pre.prettyprint{border:1px solid #ccc !important;padding:10px}header#sidebar h2{text-transform:none}::selection{color:#4d4d4d;background-color:#efefef}</style>
+<link rel="apple-touch-icon-precomposed" sizes="57x57" href="/images/favicons/apple-touch-icon-57x57.png" />
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/favicons/apple-touch-icon-114x114.png" />
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/images/favicons/apple-touch-icon-72x72.png" />
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/images/favicons/apple-touch-icon-144x144.png" />
+<link rel="apple-touch-icon-precomposed" sizes="60x60" href="/images/favicons/apple-touch-icon-60x60.png" />
+<link rel="apple-touch-icon-precomposed" sizes="120x120" href="/images/favicons/apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon-precomposed" sizes="76x76" href="/images/favicons/apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon-precomposed" sizes="152x152" href="/images/favicons/apple-touch-icon-152x152.png" />
+<link rel="icon" type="image/png" href="/images/favicons/favicon-196x196.png" sizes="196x196" />
+<link rel="icon" type="image/png" href="/images/favicons/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/png" href="/images/favicons/favicon-32x32.png" sizes="32x32" />
+<link rel="icon" type="image/png" href="/images/favicons/favicon-16x16.png" sizes="16x16" />
+<link rel="icon" type="image/png" href="/images/favicons/favicon-128.png" sizes="128x128" />
+<meta name="application-name" content="&nbsp;"/>
+<meta name="msapplication-TileColor" content="#FFFFFF" />
+<meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png" />
+<meta name="msapplication-square70x70logo" content="/images/favicons/mstile-70x70.png" />
+<meta name="msapplication-square150x150logo" content="/images/favicons/mstile-150x150.png" />
+<meta name="msapplication-wide310x150logo" content="/images/favicons/mstile-310x150.png" />
+<meta name="msapplication-square310x310logo" content="/images/favicons/mstile-310x310.png" />
+
 </head>
 <body>
 <!-- Wrapper -->
@@ -33,8 +56,8 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
       <ul>
         <li class="search">
           <a class="fa-search" href="#search">Search</a>
-          <form id="search" method="get" action="#">
-            <input type="text" name="query" placeholder="Search" />
+          <form id="search" method="get" action="/search">
+            <input type="text" name="q" placeholder="Search" />
           </form>
         </li>
         <li class="menu">

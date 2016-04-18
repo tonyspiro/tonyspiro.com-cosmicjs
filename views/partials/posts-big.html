@@ -8,9 +8,9 @@
       </div>
       <div class="meta">
         <time class="published" datetime="2015-11-01">{{ published_friendly }}</time>
-        <a href="#" class="author"><span class="name">{{ metafield.author.object.title }}</span>
+        <div class="author"><span class="name">{{ metafield.author.object.title }}</span>
           <img src="https://cosmicjs.com/uploads/{{ metafield.author.object.metafields.0.value }}" alt="" />
-        </a>
+        </div>
       </div>
     </header>
     {{# metafield.hero.value }}

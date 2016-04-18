@@ -2,8 +2,7 @@
 import Cosmic from 'cosmicjs'
 import moment from 'moment'
 module.exports = (app, config, partials) => {
-  app.get('/work', (req, res) => {
-    const slug = 'work'
+  app.get('/search', (req, res) => {
     Cosmic.getObjects({ bucket: { slug: config.COSMIC_BUCKET } }, (err, response) => {
       res.locals.cosmic = response
       const posts = response.objects.type.posts
@@ -28,8 +27,19 @@ module.exports = (app, config, partials) => {
         return post
       })
       res.locals.cosmic.objects.type.posts = friendly_date_posts
-      partials['work-big'] = 'partials/work-big'
-      return res.render('work.html', {
+      // Search results
+      const q = req.query.q
+      const objects = response.objects.all
+      const results = objects.filter(object => {
+        if (object.title.toLowerCase().indexOf(q.toLowerCase()) !== -1 || object.content.toLowerCase().indexOf(q.toLowerCase()) !== -1) {
+          return object
+        }
+      })
+      res.locals.q = q
+      res.locals.results = results
+      res.locals.num_results = results.length
+      partials['search-results'] = 'partials/search-results'
+      return res.render('search.html', {
         partials
       })
     })

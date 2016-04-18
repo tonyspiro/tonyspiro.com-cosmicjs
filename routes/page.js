@@ -4,8 +4,6 @@ import moment from 'moment'
 module.exports = (app, config, partials) => {
   app.get('/:slug', (req, res) => {
     const slug = req.params.slug
-    if (req.url === '/favicon.ico')
-      return res.end()
     Cosmic.getObjects({ bucket: { slug: config.COSMIC_BUCKET } }, (err, response) => {
       res.locals.cosmic = response
       const posts = response.objects.type.posts
@@ -46,6 +44,9 @@ module.exports = (app, config, partials) => {
           partials
         })  
       }
+      // Test if post
+      if (res.locals.page.type_slug === 'posts')
+        res.locals.page.is_post = true
       res.locals.cosmic.objects.type.posts = friendly_date_posts
       return res.render('page.html', {
         partials
