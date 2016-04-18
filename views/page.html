@@ -8,19 +8,19 @@
         <h2>
           {{ page.title }}
         </h2>
-        {{# page.is_post }}
-          <div class="meta shorti text-left mb-40">
-            <time class="published" datetime="2015-11-01">{{ page.published_friendly }}</time>
-            <div class="shorti w-100p text-left">
-              <span class="name shorti mb-10" style="border-bottom: 0">{{ page.metafield.author.object.title }}</span>
-              <img style="display: none;" class="shorti w-40 br-100" src="https://cosmicjs.com/uploads/{{ page.metafield.author.object.metafields.0.value }}" alt="" />
-            </div>
-          </div>
-        {{/ page.is_post }}
       </header>
     </section>
     <!-- Content -->
     <section id="content" style="max-width:1000px; margin: 0 auto 60px auto">
+      {{# page.is_post }}
+        <div class="meta shorti text-left mb-40">
+          <time class="published" datetime="2015-11-01">{{ page.published_friendly }}</time>
+          <div class="shorti w-100p text-left">
+            <span class="name shorti mb-10" style="border-bottom: 0">{{ page.metafield.author.object.title }}</span>
+            <img style="display: none;" class="shorti w-40 br-100" src="https://cosmicjs.com/uploads/{{ page.metafield.author.object.metafields.0.value }}" alt="" />
+          </div>
+        </div>
+      {{/ page.is_post }}
       {{# post.metafield.hero.value }}
         <img style="max-width:100%; margin-bottom: 20px" src="https://cosmicjs.com/uploads/{{ post.metafield.hero.value }}" alt="" />
       {{/ post.metafield.hero.value }}

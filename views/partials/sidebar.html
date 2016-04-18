@@ -15,6 +15,11 @@
         </h2>
       </a>
       {{{ cosmic.object.header.metafield.site-tag.value }}}
+      <ul class="icons">
+        <li><a target="_blank" href="{{ cosmic.object.contact-info.metafield.twitter.value }}" class="shorti font-40 fa-twitter"><span class="label">Twitter</span></a></li>
+        <li><a target="_blank" href="{{ cosmic.object.contact-info.metafield.github.value }}" class="shorti font-40 fa-github"><span class="label">GitHub</span></a></li>
+        <li><a href="mailto:{{ cosmic.object.contact-info.metafield.email.value }}" class="shorti font-40 fa-envelope"><span class="label">Email</span></a></li>
+      </ul>
     </header>
   </section>
 
@@ -32,11 +37,6 @@
 
   <!-- Footer -->
   <section id="footer">
-    <ul class="icons">
-      <li><a target="_blank" href="{{ cosmic.object.contact-info.metafield.twitter.value }}" class="shorti font-40 fa-twitter"><span class="label">Twitter</span></a></li>
-      <li><a target="_blank" href="{{ cosmic.object.contact-info.metafield.github.value }}" class="shorti font-40 fa-github"><span class="label">GitHub</span></a></li>
-      <li><a href="mailto:{{ cosmic.object.contact-info.metafield.email.value }}" class="shorti font-40 fa-envelope"><span class="label">Email</span></a></li>
-    </ul>
     <p class="copyright shorti font-16">
       &copy; {{ year }} {{ cosmic.object.nav.metafield.site-title.value }}<br>
       Design: <a href="http://html5up.net">HTML5 UP</a>. <br>
