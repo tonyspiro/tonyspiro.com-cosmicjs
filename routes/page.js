@@ -30,8 +30,13 @@ module.exports = (app, config, partials) => {
       // Get current page / post
       const objects = response.objects.all
       objects.forEach(page => {
-        if (page.slug === slug)
+        if (page.slug === slug) {
+          let published_friendly = 0
+          if (page.metafield.published)
+            published_friendly = moment(page.metafield.published.value).format('MMMM Do, YYYY')
+          page.published_friendly = published_friendly
           res.locals.page = page
+        }
       })
       if (!res.locals.page) {
         return res.render('404.html', {
