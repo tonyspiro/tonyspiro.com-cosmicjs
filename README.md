@@ -6,7 +6,7 @@ The frontend is from [html5up.net](html5up.net) and is made dynamic with mustach
 In ```app-server.js``` set your Cosmic JS bucket slug:
 ```
 const config = {
-  COSMIC_BUCKET: process.env.COSMIC_BUCKET || 'future-imperfect'
+  COSMIC_BUCKET: process.env.COSMIC_BUCKET || 'your-blog-slug'
 }
 ```
 Then install:
