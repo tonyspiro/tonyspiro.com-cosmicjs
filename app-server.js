@@ -20,6 +20,9 @@ app.use((req, res, next) => {
     return res.redirect('http://tonyspiro.com' + req.url)
   // Set global valiables
   res.locals.year = new Date().getFullYear()
+  // Set dev
+  if (process.env.NODE_ENV === 'development')
+    res.locals.is_dev = true
   next()
 })
 const partials = {
