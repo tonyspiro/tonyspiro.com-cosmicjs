@@ -5,7 +5,10 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "development": "COSMIC_BUCKET=tonyspiro PORT=5000 nodemon app.js -e js,html"
+    "development": "COSMIC_BUCKET=tonyspiro PORT=5000 NODE_ENV=development nodemon app.js -e js,html",
+    "concat-js": "rm -f public/assets/js/combined.js; concat-cli -f public/assets/js/jquery.min.js public/assets/js/skel.min.js public/assets/js/util.js public/assets/js/main.js public/assets/js/prism.js public/assets/js/shorti-browser.js -o public/assets/js/combined.js",
+    "minify-css": "minify public/assets/css/main.css public/assets/css/main.min.css",
+    "minify-js": "minify public/assets/js/combined.js"
   },
   "author": "",
   "license": "ISC",
@@ -20,5 +23,9 @@
     "install": "^0.4.4",
     "moment": "^2.11.2",
     "npm": "^3.7.2"
+  },
+  "devDependencies": {
+    "concat-cli": "^4.0.0",
+    "minifier": "^0.7.1"
   }
 }
