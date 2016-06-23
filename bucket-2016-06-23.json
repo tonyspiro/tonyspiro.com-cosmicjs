@@ -169,7 +169,12 @@
         }
       }
     ],
-    "links": null,
+    "links": [
+      {
+        "title": "The Website",
+        "link": "https://tonyspiro.com"
+      }
+    ],
     "objects": [
       {
         "_id": "5712bb5de9c686d006000013",
@@ -321,6 +326,71 @@
         "modified": "2016-04-17T22:14:58.986Z"
       },
       {
+        "_id": "576acf43229db02131000074",
+        "order": 0,
+        "slug": "getting-started-with-mobx-an-easy-example",
+        "title": "Getting Started With MobX: An Easy Example",
+        "content": "<p>React is the new hotness in the JavaScript world and <a href=\"https://mobxjs.github.io/mobx/\" target=\"_blank\">MobX</a>&nbsp;looks to be becoming the new hotness in the React world, so I thought I would check it out and see what all the fuss is about. &nbsp;</p><p>MobX in its purest form is a state-management tool, one that is most commonly being used in conjunction with React. &nbsp;There are&nbsp;many other implementations of React state management (Flux, Redux, Reflux, etc) because application state is hard especially managing state as an application grows. Everyone has their own opinion on their preferred method, but as I looked deeper into MobX and the other options, I found MobX to be an extremely easy and intuitive way to manage state for my application. &nbsp;Forget about boilerplate, configuration and event emitters, MobX covers you with it's observed state patterns.</p><p>To dive into it further,&nbsp;I built an <a href=\"https://github.com/tonyspiro/easy-mobx-example\" target=\"_blank\">Easy MobX Example available on GitHub</a>. &nbsp;You can also <a href=\"http://easy-mobx-example.cosmicapp.co/\" target=\"_blank\">view the finished demo here</a>. &nbsp;In this article I will show you step-by-step how to build an easy MobX-powered React application. &nbsp;Let's get started.</p><p>Let's start with our index file:</p><pre class=\"  language-markup\"><code class=\"  language-markup\"><span class=\"token doctype\">&lt;!DOCTYPE html&gt;</span>\r\n<span class=\"token tag\"><span class=\"token tag\"><span class=\"token punctuation\">&lt;</span>html</span><span class=\"token punctuation\">&gt;</span></span>\r\n  <span class=\"token tag\"><span class=\"token tag\"><span class=\"token punctuation\">&lt;</span>head</span><span class=\"token punctuation\">&gt;</span></span>\r\n    <span class=\"token tag\"><span class=\"token tag\"><span class=\"token punctuation\">&lt;</span>title</span><span class=\"token punctuation\">&gt;</span></span>Easy MobX Example<span class=\"token tag\"><span class=\"token tag\"><span class=\"token punctuation\">&lt;/</span>title</span><span class=\"token punctuation\">&gt;</span></span>\r\n    <span class=\"token tag\"><span class=\"token tag\"><span class=\"token punctuation\">&lt;</span>link</span> <span class=\"token attr-name\">rel</span><span class=\"token attr-value\"><span class=\"token punctuation\">=</span><span class=\"token punctuation\">\"</span>stylesheet<span class=\"token punctuation\">\"</span></span> <span class=\"token attr-name\">href</span><span class=\"token attr-value\"><span class=\"token punctuation\">=</span><span class=\"token punctuation\">\"</span>https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css<span class=\"token punctuation\">\"</span></span><span class=\"token punctuation\">&gt;</span></span>\r\n  <span class=\"token tag\"><span class=\"token tag\"><span class=\"token punctuation\">&lt;/</span>head</span><span class=\"token punctuation\">&gt;</span></span>\r\n  <span class=\"token tag\"><span class=\"token tag\"><span class=\"token punctuation\">&lt;</span>body</span><span class=\"token punctuation\">&gt;</span></span>\r\n    <span class=\"token tag\"><span class=\"token tag\"><span class=\"token punctuation\">&lt;</span>div</span> <span class=\"token attr-name\">id</span><span class=\"token attr-value\"><span class=\"token punctuation\">=</span><span class=\"token punctuation\">\"</span>root<span class=\"token punctuation\">\"</span></span><span class=\"token punctuation\">&gt;</span></span><span class=\"token tag\"><span class=\"token tag\"><span class=\"token punctuation\">&lt;/</span>div</span><span class=\"token punctuation\">&gt;</span></span>\r\n    <span class=\"token tag\"><span class=\"token tag\"><span class=\"token punctuation\">&lt;</span>script</span> <span class=\"token attr-name\">src</span><span class=\"token attr-value\"><span class=\"token punctuation\">=</span><span class=\"token punctuation\">\"</span>/bundle.js<span class=\"token punctuation\">\"</span></span><span class=\"token punctuation\">&gt;</span></span><span class=\"token script language-javascript\"></span><span class=\"token tag\"><span class=\"token tag\"><span class=\"token punctuation\">&lt;/</span>script</span><span class=\"token punctuation\">&gt;</span></span>\r\n  <span class=\"token tag\"><span class=\"token tag\"><span class=\"token punctuation\">&lt;/</span>body</span><span class=\"token punctuation\">&gt;</span></span>\r\n<span class=\"token tag\"><span class=\"token tag\"><span class=\"token punctuation\">&lt;/</span>html</span><span class=\"token punctuation\">&gt;</span></span></code></pre>\r\n\r\n<p>All you need is a div with <code class=\"  language-markup\">id=\"root\"</code> and the <code class=\"  language-markup\">bundle.js</code> file which will store all our application logic. &nbsp;We're also going to add Bootstrap to our application for a better frontend UI. &nbsp;Now let's add some packages!</p><p>Create the package.json file and add this to it:</p><pre class=\"  language-javascript\"><code class=\"  language-javascript\"><span class=\"token punctuation\">{</span>\r\n  <span class=\"token string\">\"name\"</span><span class=\"token punctuation\">:</span> <span class=\"token string\">\"easy-mobx-example\"</span><span class=\"token punctuation\">,</span>\r\n  <span class=\"token string\">\"version\"</span><span class=\"token punctuation\">:</span> <span class=\"token string\">\"1.0.0\"</span><span class=\"token punctuation\">,</span>\r\n  <span class=\"token string\">\"description\"</span><span class=\"token punctuation\">:</span> <span class=\"token string\">\"Easy Example for MobX + React. Includes hot code reloading in development mode and minification in production mode.  Also includes a demonstration of how to hook up a CMS API and do database calls and loading states.\"</span><span class=\"token punctuation\">,</span>\r\n  <span class=\"token string\">\"scripts\"</span><span class=\"token punctuation\">:</span> <span class=\"token punctuation\">{</span>\r\n    <span class=\"token string\">\"development\"</span><span class=\"token punctuation\">:</span> <span class=\"token string\">\"NODE_ENV=development node server-dev.js\"</span><span class=\"token punctuation\">,</span>\r\n    <span class=\"token string\">\"start\"</span><span class=\"token punctuation\">:</span> <span class=\"token string\">\"NODE_ENV=production webpack -p; NODE_ENV=production node server.js\"</span>\r\n  <span class=\"token punctuation\">}</span><span class=\"token punctuation\">,</span>\r\n  <span class=\"token string\">\"devDependencies\"</span><span class=\"token punctuation\">:</span> <span class=\"token punctuation\">{</span>\r\n    <span class=\"token string\">\"babel-core\"</span><span class=\"token punctuation\">:</span> <span class=\"token string\">\"^6.9.1\"</span><span class=\"token punctuation\">,</span>\r\n    <span class=\"token string\">\"babel-loader\"</span><span class=\"token punctuation\">:</span> <span class=\"token string\">\"^6.2.4\"</span><span class=\"token punctuation\">,</span>\r\n    <span class=\"token string\">\"babel-plugin-transform-decorators-legacy\"</span><span class=\"token punctuation\">:</span> <span class=\"token string\">\"^1.3.4\"</span><span class=\"token punctuation\">,</span>\r\n    <span class=\"token string\">\"babel-preset-es2015\"</span><span class=\"token punctuation\">:</span> <span class=\"token string\">\"^6.9.0\"</span><span class=\"token punctuation\">,</span>\r\n    <span class=\"token string\">\"babel-preset-react\"</span><span class=\"token punctuation\">:</span> <span class=\"token string\">\"^6.5.0\"</span><span class=\"token punctuation\">,</span>\r\n    <span class=\"token string\">\"babel-preset-stage-1\"</span><span class=\"token punctuation\">:</span> <span class=\"token string\">\"^6.5.0\"</span><span class=\"token punctuation\">,</span>\r\n    <span class=\"token string\">\"eslint-plugin-react\"</span><span class=\"token punctuation\">:</span> <span class=\"token string\">\"^5.1.1\"</span><span class=\"token punctuation\">,</span>\r\n    <span class=\"token string\">\"react-hot-loader\"</span><span class=\"token punctuation\">:</span> <span class=\"token string\">\"^3.0.0-beta.2\"</span><span class=\"token punctuation\">,</span>\r\n    <span class=\"token string\">\"webpack\"</span><span class=\"token punctuation\">:</span> <span class=\"token string\">\"^1.13.1\"</span><span class=\"token punctuation\">,</span>\r\n    <span class=\"token string\">\"webpack-dev-server\"</span><span class=\"token punctuation\">:</span> <span class=\"token string\">\"^1.14.1\"</span>\r\n  <span class=\"token punctuation\">}</span><span class=\"token punctuation\">,</span>\r\n  <span class=\"token string\">\"dependencies\"</span><span class=\"token punctuation\">:</span> <span class=\"token punctuation\">{</span>\r\n    <span class=\"token string\">\"cosmicjs\"</span><span class=\"token punctuation\">:</span> <span class=\"token string\">\"^2.1.2\"</span><span class=\"token punctuation\">,</span>\r\n    <span class=\"token string\">\"express\"</span><span class=\"token punctuation\">:</span> <span class=\"token string\">\"^4.14.0\"</span><span class=\"token punctuation\">,</span>\r\n    <span class=\"token string\">\"hogan-express\"</span><span class=\"token punctuation\">:</span> <span class=\"token string\">\"^0.5.2\"</span><span class=\"token punctuation\">,</span>\r\n    <span class=\"token string\">\"mobx\"</span><span class=\"token punctuation\">:</span> <span class=\"token string\">\"^2.2.2\"</span><span class=\"token punctuation\">,</span>\r\n    <span class=\"token string\">\"mobx-react\"</span><span class=\"token punctuation\">:</span> <span class=\"token string\">\"^3.3.1\"</span><span class=\"token punctuation\">,</span>\r\n    <span class=\"token string\">\"mobx-react-devtools\"</span><span class=\"token punctuation\">:</span> <span class=\"token string\">\"^4.2.0\"</span><span class=\"token punctuation\">,</span>\r\n    <span class=\"token string\">\"react\"</span><span class=\"token punctuation\">:</span> <span class=\"token string\">\"^15.1.0\"</span><span class=\"token punctuation\">,</span>\r\n    <span class=\"token string\">\"react-bootstrap\"</span><span class=\"token punctuation\">:</span> <span class=\"token string\">\"^0.29.5\"</span><span class=\"token punctuation\">,</span>\r\n    <span class=\"token string\">\"react-dom\"</span><span class=\"token punctuation\">:</span> <span class=\"token string\">\"^15.1.0\"</span><span class=\"token punctuation\">,</span>\r\n    <span class=\"token string\">\"shorti\"</span><span class=\"token punctuation\">:</span> <span class=\"token string\">\"^1.1.6\"</span><span class=\"token punctuation\">,</span>\r\n    <span class=\"token string\">\"slug\"</span><span class=\"token punctuation\">:</span> <span class=\"token string\">\"^0.9.1\"</span>\r\n  <span class=\"token punctuation\">}</span>\r\n<span class=\"token punctuation\">}</span></code></pre>\r\n\r\n<p>Now run the init script in your terminal.<br></p>\r\n<pre class=\"  language-markup\"><code class=\"  language-markup\">npm init</code></pre><p>Basically we're installing:<br><span style=\"line-height: 1.42857;\">1. Babel to compile our ES6 and React JavaScript into ES5.<br></span><span style=\"line-height: 1.42857;\">2. React Hot Loader for magic reloading when we edit any code in development.<br></span><span style=\"line-height: 1.42857;\">3. Webpack to bundle everything.<br></span><span style=\"line-height: 1.42857;\">4. <a href=\"https://cosmicjs.com\" target=\"_blank\">Cosmic JS</a> to connect to a <a href=\"https://cosmicjs.com\" target=\"_blank\">CMS API</a> that will serve as a good example of how to handle loading states during database calls.<br></span><span style=\"line-height: 1.42857;\">5. Express for our node server framework.<br></span><span style=\"line-height: 1.42857;\">6. MobX for state management.<br></span><span style=\"line-height: 1.42857;\">7. React for UI components.<br></span><span style=\"line-height: 1.42857;\">8. React Bootstrap for better UI style.<br></span><span style=\"line-height: 1.42857;\">9. Shorti for easy inline styles.<br></span><span style=\"line-height: 1.42857;\">10. Slug to slugify our titles before adding them to Cosmic JS.</span></p><p>Next let's add our server-side code!</p>\r\n<p>Create a new file titled <code class=\"  language-markup\">server.js</code> and add the following:</p><pre class=\"  language-javascript\"><code class=\"  language-javascript\"><span class=\"token keyword\">var</span> express <span class=\"token operator\">=</span> <span class=\"token function\">require</span><span class=\"token punctuation\">(</span><span class=\"token string\">'express'</span><span class=\"token punctuation\">)</span>\r\n<span class=\"token keyword\">var</span> app <span class=\"token operator\">=</span> <span class=\"token function\">express</span><span class=\"token punctuation\">(</span><span class=\"token punctuation\">)</span>\r\n<span class=\"token keyword\">var</span> hogan <span class=\"token operator\">=</span> <span class=\"token function\">require</span><span class=\"token punctuation\">(</span><span class=\"token string\">'hogan-express'</span><span class=\"token punctuation\">)</span>\r\napp<span class=\"token punctuation\">.</span><span class=\"token function\">engine</span><span class=\"token punctuation\">(</span><span class=\"token string\">'html'</span><span class=\"token punctuation\">,</span> hogan<span class=\"token punctuation\">)</span>\r\napp<span class=\"token punctuation\">.</span><span class=\"token keyword\">set</span><span class=\"token punctuation\">(</span><span class=\"token string\">'views'</span><span class=\"token punctuation\">,</span> __dirname <span class=\"token operator\">+</span> <span class=\"token string\">'/'</span><span class=\"token punctuation\">)</span>\r\napp<span class=\"token punctuation\">.</span><span class=\"token keyword\">set</span><span class=\"token punctuation\">(</span><span class=\"token string\">'port'</span><span class=\"token punctuation\">,</span> process<span class=\"token punctuation\">.</span>env<span class=\"token punctuation\">.</span>PORT <span class=\"token operator\">||</span> <span class=\"token number\">3000</span><span class=\"token punctuation\">)</span>\r\napp<span class=\"token punctuation\">.</span><span class=\"token function\">use</span><span class=\"token punctuation\">(</span>express<span class=\"token punctuation\">.</span><span class=\"token keyword\">static</span><span class=\"token punctuation\">(</span>__dirname <span class=\"token operator\">+</span> <span class=\"token string\">'/public'</span><span class=\"token punctuation\">)</span><span class=\"token punctuation\">)</span>\r\napp<span class=\"token punctuation\">.</span><span class=\"token keyword\">get</span><span class=\"token punctuation\">(</span><span class=\"token string\">'/'</span><span class=\"token punctuation\">,</span> <span class=\"token keyword\">function</span><span class=\"token punctuation\">(</span>req<span class=\"token punctuation\">,</span> res<span class=\"token punctuation\">)</span><span class=\"token punctuation\">{</span>\r\n  res<span class=\"token punctuation\">.</span><span class=\"token function\">render</span><span class=\"token punctuation\">(</span><span class=\"token string\">'index.html'</span><span class=\"token punctuation\">)</span>\r\n<span class=\"token punctuation\">}</span><span class=\"token punctuation\">)</span>\r\nconsole<span class=\"token punctuation\">.</span><span class=\"token function\">log</span><span class=\"token punctuation\">(</span><span class=\"token string\">'Listening at localhost:'</span> <span class=\"token operator\">+</span> app<span class=\"token punctuation\">.</span><span class=\"token keyword\">get</span><span class=\"token punctuation\">(</span><span class=\"token string\">'port'</span><span class=\"token punctuation\">)</span><span class=\"token punctuation\">)</span>\r\napp<span class=\"token punctuation\">.</span><span class=\"token function\">listen</span><span class=\"token punctuation\">(</span>app<span class=\"token punctuation\">.</span><span class=\"token keyword\">get</span><span class=\"token punctuation\">(</span><span class=\"token string\">'port'</span><span class=\"token punctuation\">)</span><span class=\"token punctuation\">)</span></code></pre>\r\n<p><span style=\"line-height: 1.42857;\">Here we are:<br></span><span style=\"line-height: 1.42857;\">1. Adding the Express node framework.<br></span><span style=\"line-height: 1.42857;\">2.&nbsp;</span><span style=\"line-height: 1.42857;\">Adding </span><span style=\"line-height: 1.42857;\">Hogan, my preferred view template engine.<br></span><span style=\"line-height: 1.42857;\">3. The only route for the app which is '/'.<br></span><span style=\"line-height: 1.42857;\">4. Listening on port 3000 on server start.</span></p><p><span style=\"line-height: 1.42857;\">Now let's add our client-side code!</span></p>\r\n<p>Create three new files titled <code class=\"  language-markup\">index.js</code>, <code class=\"  language-markup\">App.js</code> and <code class=\"  language-markup\">AppState.js</code> and put them in a directory titled <code class=\"  language-markup\">components</code>.</p><p>In&nbsp;<code class=\"  language-markup\">index.js</code>&nbsp;add the following:<br></p>\r\n<pre class=\"  language-javascript\"><code class=\"  language-javascript\"><span class=\"token keyword\">import</span> React <span class=\"token keyword\">from</span> <span class=\"token string\">'react'</span>\r\n<span class=\"token keyword\">import</span> <span class=\"token punctuation\">{</span> render <span class=\"token punctuation\">}</span> <span class=\"token keyword\">from</span> <span class=\"token string\">'react-dom'</span>\r\n<span class=\"token keyword\">import</span> <span class=\"token punctuation\">{</span> AppContainer <span class=\"token punctuation\">}</span> <span class=\"token keyword\">from</span> <span class=\"token string\">'react-hot-loader'</span>\r\n<span class=\"token keyword\">import</span> AppState <span class=\"token keyword\">from</span> <span class=\"token string\">'./AppState'</span>\r\n<span class=\"token keyword\">import</span> App <span class=\"token keyword\">from</span> <span class=\"token string\">'./App'</span>\r\n\r\n<span class=\"token keyword\">const</span> data <span class=\"token operator\">=</span> <span class=\"token keyword\">new</span> <span class=\"token class-name\">AppState</span><span class=\"token punctuation\">(</span><span class=\"token punctuation\">)</span>\r\n<span class=\"token function\">render</span><span class=\"token punctuation\">(</span>\r\n  <span class=\"token operator\">&lt;</span>AppContainer<span class=\"token operator\">&gt;</span>\r\n    <span class=\"token operator\">&lt;</span>App data<span class=\"token operator\">=</span><span class=\"token punctuation\">{</span>data<span class=\"token punctuation\">}</span> <span class=\"token operator\">/</span><span class=\"token operator\">&gt;</span>\r\n  <span class=\"token operator\">&lt;</span><span class=\"token operator\">/</span>AppContainer<span class=\"token operator\">&gt;</span><span class=\"token punctuation\">,</span>\r\n  document<span class=\"token punctuation\">.</span><span class=\"token function\">getElementById</span><span class=\"token punctuation\">(</span><span class=\"token string\">'root'</span><span class=\"token punctuation\">)</span>\r\n<span class=\"token punctuation\">)</span>\r\n<span class=\"token keyword\">if</span> <span class=\"token punctuation\">(</span>process<span class=\"token punctuation\">.</span>env<span class=\"token punctuation\">.</span>NODE_ENV <span class=\"token operator\">!==</span> <span class=\"token string\">'production'</span> <span class=\"token operator\">&amp;&amp;</span> module<span class=\"token punctuation\">.</span>hot<span class=\"token punctuation\">)</span> <span class=\"token punctuation\">{</span>\r\n  module<span class=\"token punctuation\">.</span>hot<span class=\"token punctuation\">.</span><span class=\"token function\">accept</span><span class=\"token punctuation\">(</span><span class=\"token string\">'./App'</span><span class=\"token punctuation\">,</span> <span class=\"token punctuation\">(</span><span class=\"token punctuation\">)</span> <span class=\"token operator\">=</span><span class=\"token operator\">&gt;</span> <span class=\"token punctuation\">{</span>\r\n    <span class=\"token keyword\">const</span> NextApp <span class=\"token operator\">=</span> <span class=\"token function\">require</span><span class=\"token punctuation\">(</span><span class=\"token string\">'./App'</span><span class=\"token punctuation\">)</span><span class=\"token punctuation\">.</span><span class=\"token keyword\">default</span>\r\n    <span class=\"token function\">render</span><span class=\"token punctuation\">(</span>\r\n      <span class=\"token operator\">&lt;</span>AppContainer<span class=\"token operator\">&gt;</span>\r\n        <span class=\"token operator\">&lt;</span>NextApp data<span class=\"token operator\">=</span><span class=\"token punctuation\">{</span>data<span class=\"token punctuation\">}</span> <span class=\"token operator\">/</span><span class=\"token operator\">&gt;</span>\r\n      <span class=\"token operator\">&lt;</span><span class=\"token operator\">/</span>AppContainer<span class=\"token operator\">&gt;</span><span class=\"token punctuation\">,</span>\r\n      document<span class=\"token punctuation\">.</span><span class=\"token function\">getElementById</span><span class=\"token punctuation\">(</span><span class=\"token string\">'root'</span><span class=\"token punctuation\">)</span>\r\n    <span class=\"token punctuation\">)</span>\r\n  <span class=\"token punctuation\">}</span><span class=\"token punctuation\">)</span>\r\n<span class=\"token punctuation\">}</span></code></pre>\r\n<p>This is the entry point of our application.  It's creating the ability for hot reloading as well as providing our lower-level App component with the data from the AppState class.</p>\r\n<p>Now let's add the following to the <code class=\"  language-markup\">App.js</code> file:</p>\r\n<pre class=\"  language-javascript\"><code class=\"  language-javascript\"><span class=\"token keyword\">import</span> React<span class=\"token punctuation\">,</span> <span class=\"token punctuation\">{</span> Component <span class=\"token punctuation\">}</span> <span class=\"token keyword\">from</span> <span class=\"token string\">'react'</span>\r\n<span class=\"token keyword\">import</span> <span class=\"token punctuation\">{</span> observer <span class=\"token punctuation\">}</span> <span class=\"token keyword\">from</span> <span class=\"token string\">'mobx-react'</span>\r\n<span class=\"token keyword\">import</span> <span class=\"token punctuation\">{</span> FormGroup<span class=\"token punctuation\">,</span> FormControl<span class=\"token punctuation\">,</span> Input<span class=\"token punctuation\">,</span> Button <span class=\"token punctuation\">}</span> <span class=\"token keyword\">from</span> <span class=\"token string\">'react-bootstrap'</span>\r\n<span class=\"token keyword\">import</span> config <span class=\"token keyword\">from</span> <span class=\"token string\">'../config'</span>\r\n<span class=\"token keyword\">import</span> <span class=\"token punctuation\">{</span> addObject<span class=\"token punctuation\">,</span> deleteObject <span class=\"token punctuation\">}</span> <span class=\"token keyword\">from</span> <span class=\"token string\">'cosmicjs'</span>\r\n<span class=\"token keyword\">import</span> slug <span class=\"token keyword\">from</span> <span class=\"token string\">'slug'</span>\r\n<span class=\"token keyword\">import</span> S <span class=\"token keyword\">from</span> <span class=\"token string\">'shorti'</span>\r\n\r\n@observer\r\n<span class=\"token keyword\">export</span> <span class=\"token keyword\">default</span> <span class=\"token keyword\">class</span> <span class=\"token class-name\">App</span> <span class=\"token keyword\">extends</span> <span class=\"token class-name\">Component</span> <span class=\"token punctuation\">{</span>\r\n  <span class=\"token function\">handleInputChange</span><span class=\"token punctuation\">(</span>type<span class=\"token punctuation\">,</span> e<span class=\"token punctuation\">)</span> <span class=\"token punctuation\">{</span>\r\n    <span class=\"token keyword\">this</span><span class=\"token punctuation\">.</span>props<span class=\"token punctuation\">.</span>data<span class=\"token punctuation\">.</span>form_data<span class=\"token punctuation\">[</span>type<span class=\"token punctuation\">]</span> <span class=\"token operator\">=</span> e<span class=\"token punctuation\">.</span>target<span class=\"token punctuation\">.</span>value\r\n  <span class=\"token punctuation\">}</span>\r\n  <span class=\"token function\">handleSubmit</span><span class=\"token punctuation\">(</span>e<span class=\"token punctuation\">)</span> <span class=\"token punctuation\">{</span>\r\n    e<span class=\"token punctuation\">.</span><span class=\"token function\">preventDefault</span><span class=\"token punctuation\">(</span><span class=\"token punctuation\">)</span>\r\n    <span class=\"token keyword\">const</span> title <span class=\"token operator\">=</span> <span class=\"token keyword\">this</span><span class=\"token punctuation\">.</span>props<span class=\"token punctuation\">.</span>data<span class=\"token punctuation\">.</span>form_data<span class=\"token punctuation\">.</span>title\r\n    <span class=\"token keyword\">const</span> content <span class=\"token operator\">=</span> <span class=\"token keyword\">this</span><span class=\"token punctuation\">.</span>props<span class=\"token punctuation\">.</span>data<span class=\"token punctuation\">.</span>form_data<span class=\"token punctuation\">.</span>content\r\n    <span class=\"token keyword\">if</span> <span class=\"token punctuation\">(</span><span class=\"token operator\">!</span>title<span class=\"token punctuation\">)</span>\r\n      <span class=\"token keyword\">return</span>\r\n    <span class=\"token keyword\">const</span> object <span class=\"token operator\">=</span> <span class=\"token punctuation\">{</span>\r\n      slug<span class=\"token punctuation\">:</span> <span class=\"token function\">slug</span><span class=\"token punctuation\">(</span>title<span class=\"token punctuation\">)</span><span class=\"token punctuation\">,</span>\r\n      type_slug<span class=\"token punctuation\">:</span> <span class=\"token string\">'posts'</span><span class=\"token punctuation\">,</span>\r\n      title<span class=\"token punctuation\">,</span>\r\n      content\r\n    <span class=\"token punctuation\">}</span>\r\n    <span class=\"token keyword\">this</span><span class=\"token punctuation\">.</span>props<span class=\"token punctuation\">.</span>data<span class=\"token punctuation\">.</span>is_saving <span class=\"token operator\">=</span> <span class=\"token boolean\">true</span>\r\n    <span class=\"token function\">addObject</span><span class=\"token punctuation\">(</span><span class=\"token punctuation\">{</span> bucket<span class=\"token punctuation\">:</span> config<span class=\"token punctuation\">.</span>cosmicjs<span class=\"token punctuation\">.</span>bucket <span class=\"token punctuation\">}</span><span class=\"token punctuation\">,</span> object<span class=\"token punctuation\">,</span> <span class=\"token punctuation\">(</span>err<span class=\"token punctuation\">,</span> res<span class=\"token punctuation\">)</span> <span class=\"token operator\">=</span><span class=\"token operator\">&gt;</span> <span class=\"token punctuation\">{</span>\r\n      <span class=\"token keyword\">this</span><span class=\"token punctuation\">.</span>props<span class=\"token punctuation\">.</span>data<span class=\"token punctuation\">.</span>is_saving <span class=\"token operator\">=</span> <span class=\"token boolean\">false</span>\r\n      <span class=\"token keyword\">this</span><span class=\"token punctuation\">.</span>props<span class=\"token punctuation\">.</span>data<span class=\"token punctuation\">.</span><span class=\"token function\">addPost</span><span class=\"token punctuation\">(</span>res<span class=\"token punctuation\">.</span>object<span class=\"token punctuation\">)</span>\r\n      <span class=\"token keyword\">this</span><span class=\"token punctuation\">.</span>props<span class=\"token punctuation\">.</span>data<span class=\"token punctuation\">.</span>form_data <span class=\"token operator\">=</span> <span class=\"token punctuation\">{</span>\r\n        title<span class=\"token punctuation\">:</span> <span class=\"token string\">''</span><span class=\"token punctuation\">,</span>\r\n        content<span class=\"token punctuation\">:</span> <span class=\"token string\">''</span>\r\n      <span class=\"token punctuation\">}</span>\r\n    <span class=\"token punctuation\">}</span><span class=\"token punctuation\">)</span>\r\n  <span class=\"token punctuation\">}</span>\r\n  <span class=\"token function\">handleRemoveClick</span><span class=\"token punctuation\">(</span>post<span class=\"token punctuation\">)</span> <span class=\"token punctuation\">{</span>\r\n    <span class=\"token keyword\">this</span><span class=\"token punctuation\">.</span>props<span class=\"token punctuation\">.</span>data<span class=\"token punctuation\">.</span><span class=\"token function\">removePost</span><span class=\"token punctuation\">(</span>post<span class=\"token punctuation\">.</span>_id<span class=\"token punctuation\">)</span>\r\n    <span class=\"token function\">deleteObject</span><span class=\"token punctuation\">(</span><span class=\"token punctuation\">{</span> bucket<span class=\"token punctuation\">:</span> config<span class=\"token punctuation\">.</span>cosmicjs<span class=\"token punctuation\">.</span>bucket <span class=\"token punctuation\">}</span><span class=\"token punctuation\">,</span> <span class=\"token punctuation\">{</span> slug<span class=\"token punctuation\">:</span> post<span class=\"token punctuation\">.</span>slug <span class=\"token punctuation\">}</span><span class=\"token punctuation\">,</span> <span class=\"token punctuation\">(</span>err<span class=\"token punctuation\">,</span> res<span class=\"token punctuation\">)</span> <span class=\"token operator\">=</span><span class=\"token operator\">&gt;</span> <span class=\"token punctuation\">{</span>\r\n      <span class=\"token comment\" spellcheck=\"true\">// object deleted</span>\r\n    <span class=\"token punctuation\">}</span><span class=\"token punctuation\">)</span>\r\n  <span class=\"token punctuation\">}</span>\r\n  <span class=\"token function\">render</span><span class=\"token punctuation\">(</span><span class=\"token punctuation\">)</span> <span class=\"token punctuation\">{</span>\r\n    <span class=\"token keyword\">const</span> data <span class=\"token operator\">=</span> <span class=\"token keyword\">this</span><span class=\"token punctuation\">.</span>props<span class=\"token punctuation\">.</span>data\r\n    <span class=\"token keyword\">let</span> posts_area\r\n    <span class=\"token keyword\">if</span> <span class=\"token punctuation\">(</span><span class=\"token keyword\">this</span><span class=\"token punctuation\">.</span>is_loading<span class=\"token punctuation\">)</span> <span class=\"token punctuation\">{</span>\r\n      posts_area <span class=\"token operator\">=</span> <span class=\"token punctuation\">(</span>\r\n        <span class=\"token operator\">&lt;</span>div style<span class=\"token operator\">=</span><span class=\"token punctuation\">{</span> <span class=\"token function\">S</span><span class=\"token punctuation\">(</span><span class=\"token string\">'text-center font-30 mt-80 mb-80'</span><span class=\"token punctuation\">)</span> <span class=\"token punctuation\">}</span><span class=\"token operator\">&gt;</span>Loading<span class=\"token punctuation\">.</span><span class=\"token punctuation\">.</span><span class=\"token punctuation\">.</span><span class=\"token operator\">&lt;</span><span class=\"token operator\">/</span>div<span class=\"token operator\">&gt;</span>\r\n      <span class=\"token punctuation\">)</span>\r\n    <span class=\"token punctuation\">}</span>\r\n    <span class=\"token keyword\">let</span> form_area\r\n    <span class=\"token keyword\">if</span> <span class=\"token punctuation\">(</span>data<span class=\"token punctuation\">.</span>posts <span class=\"token operator\">&amp;&amp;</span> data<span class=\"token punctuation\">.</span>posts<span class=\"token punctuation\">.</span>length<span class=\"token punctuation\">)</span> <span class=\"token punctuation\">{</span>\r\n      posts_area <span class=\"token operator\">=</span> data<span class=\"token punctuation\">.</span>posts<span class=\"token punctuation\">.</span><span class=\"token function\">map</span><span class=\"token punctuation\">(</span>post <span class=\"token operator\">=</span><span class=\"token operator\">&gt;</span> <span class=\"token punctuation\">{</span>\r\n        <span class=\"token keyword\">return</span> <span class=\"token punctuation\">(</span>\r\n          <span class=\"token operator\">&lt;</span>div style<span class=\"token operator\">=</span><span class=\"token punctuation\">{</span> <span class=\"token function\">S</span><span class=\"token punctuation\">(</span><span class=\"token string\">'mb-20 bg-efefef p-20 pt-15 pb-30 br-4'</span><span class=\"token punctuation\">)</span> <span class=\"token punctuation\">}</span> key<span class=\"token operator\">=</span><span class=\"token punctuation\">{</span> <span class=\"token string\">'id'</span> <span class=\"token operator\">+</span> post<span class=\"token punctuation\">.</span>_id <span class=\"token punctuation\">}</span><span class=\"token operator\">&gt;</span>\r\n            <span class=\"token operator\">&lt;</span>div onClick<span class=\"token operator\">=</span><span class=\"token punctuation\">{</span> <span class=\"token keyword\">this</span><span class=\"token punctuation\">.</span>handleRemoveClick<span class=\"token punctuation\">.</span><span class=\"token function\">bind</span><span class=\"token punctuation\">(</span><span class=\"token keyword\">this</span><span class=\"token punctuation\">,</span> post<span class=\"token punctuation\">)</span> <span class=\"token punctuation\">}</span> className<span class=\"token operator\">=</span><span class=\"token string\">\"close\"</span><span class=\"token operator\">&gt;</span><span class=\"token operator\">&amp;</span>times<span class=\"token punctuation\">;</span><span class=\"token operator\">&lt;</span><span class=\"token operator\">/</span>div<span class=\"token operator\">&gt;</span>\r\n            <span class=\"token operator\">&lt;</span>div style<span class=\"token operator\">=</span><span class=\"token punctuation\">{</span> <span class=\"token function\">S</span><span class=\"token punctuation\">(</span><span class=\"token string\">'font-20 mt-10 mb-10'</span><span class=\"token punctuation\">)</span> <span class=\"token punctuation\">}</span><span class=\"token operator\">&gt;</span><span class=\"token punctuation\">{</span> post<span class=\"token punctuation\">.</span>title <span class=\"token punctuation\">}</span><span class=\"token operator\">&lt;</span><span class=\"token operator\">/</span>div<span class=\"token operator\">&gt;</span>\r\n            <span class=\"token operator\">&lt;</span>div style<span class=\"token operator\">=</span><span class=\"token punctuation\">{</span> <span class=\"token function\">S</span><span class=\"token punctuation\">(</span><span class=\"token string\">'color-666'</span><span class=\"token punctuation\">)</span> <span class=\"token punctuation\">}</span><span class=\"token operator\">&gt;</span><span class=\"token punctuation\">{</span> post<span class=\"token punctuation\">.</span>content <span class=\"token punctuation\">}</span><span class=\"token operator\">&lt;</span><span class=\"token operator\">/</span>div<span class=\"token operator\">&gt;</span>\r\n          <span class=\"token operator\">&lt;</span><span class=\"token operator\">/</span>div<span class=\"token operator\">&gt;</span>\r\n        <span class=\"token punctuation\">)</span>\r\n      <span class=\"token punctuation\">}</span><span class=\"token punctuation\">)</span>\r\n    <span class=\"token punctuation\">}</span>\r\n    <span class=\"token keyword\">return</span> <span class=\"token punctuation\">(</span>\r\n      <span class=\"token operator\">&lt;</span>div style<span class=\"token operator\">=</span><span class=\"token punctuation\">{</span> <span class=\"token function\">S</span><span class=\"token punctuation\">(</span><span class=\"token string\">'p-20'</span><span class=\"token punctuation\">)</span> <span class=\"token punctuation\">}</span><span class=\"token operator\">&gt;</span>\r\n        <span class=\"token operator\">&lt;</span>h1 style<span class=\"token operator\">=</span><span class=\"token punctuation\">{</span> <span class=\"token function\">S</span><span class=\"token punctuation\">(</span><span class=\"token string\">'mb-20'</span><span class=\"token punctuation\">)</span> <span class=\"token punctuation\">}</span><span class=\"token operator\">&gt;</span>Easy MobX Example<span class=\"token operator\">&lt;</span><span class=\"token operator\">/</span>h1<span class=\"token operator\">&gt;</span>\r\n        <span class=\"token operator\">&lt;</span>div style<span class=\"token operator\">=</span><span class=\"token punctuation\">{</span> <span class=\"token function\">S</span><span class=\"token punctuation\">(</span><span class=\"token string\">'mb-20'</span><span class=\"token punctuation\">)</span> <span class=\"token punctuation\">}</span><span class=\"token operator\">&gt;</span>\r\n          <span class=\"token operator\">&lt;</span>form onSubmit<span class=\"token operator\">=</span><span class=\"token punctuation\">{</span> <span class=\"token keyword\">this</span><span class=\"token punctuation\">.</span>handleSubmit<span class=\"token punctuation\">.</span><span class=\"token function\">bind</span><span class=\"token punctuation\">(</span><span class=\"token keyword\">this</span><span class=\"token punctuation\">)</span> <span class=\"token punctuation\">}</span><span class=\"token operator\">&gt;</span>\r\n            <span class=\"token operator\">&lt;</span>FormGroup bsSize<span class=\"token operator\">=</span><span class=\"token string\">\"large\"</span><span class=\"token operator\">&gt;</span>\r\n              <span class=\"token operator\">&lt;</span>FormControl\r\n                onChange<span class=\"token operator\">=</span><span class=\"token punctuation\">{</span> <span class=\"token keyword\">this</span><span class=\"token punctuation\">.</span>handleInputChange<span class=\"token punctuation\">.</span><span class=\"token function\">bind</span><span class=\"token punctuation\">(</span><span class=\"token keyword\">this</span><span class=\"token punctuation\">,</span> <span class=\"token string\">'title'</span><span class=\"token punctuation\">)</span> <span class=\"token punctuation\">}</span>\r\n                placeholder<span class=\"token operator\">=</span><span class=\"token string\">\"Title\"</span>\r\n                type<span class=\"token operator\">=</span><span class=\"token string\">\"text\"</span>\r\n                value<span class=\"token operator\">=</span><span class=\"token punctuation\">{</span> <span class=\"token keyword\">this</span><span class=\"token punctuation\">.</span>props<span class=\"token punctuation\">.</span>data<span class=\"token punctuation\">.</span>form_data<span class=\"token punctuation\">.</span>title <span class=\"token punctuation\">}</span>\r\n              <span class=\"token operator\">/</span><span class=\"token operator\">&gt;</span>\r\n            <span class=\"token operator\">&lt;</span><span class=\"token operator\">/</span>FormGroup<span class=\"token operator\">&gt;</span>\r\n            <span class=\"token operator\">&lt;</span>FormGroup bsSize<span class=\"token operator\">=</span><span class=\"token string\">\"large\"</span><span class=\"token operator\">&gt;</span>\r\n              <span class=\"token operator\">&lt;</span>FormControl style<span class=\"token operator\">=</span><span class=\"token punctuation\">{</span> <span class=\"token function\">S</span><span class=\"token punctuation\">(</span><span class=\"token string\">'h-100'</span><span class=\"token punctuation\">)</span> <span class=\"token punctuation\">}</span> \r\n                onChange<span class=\"token operator\">=</span><span class=\"token punctuation\">{</span> <span class=\"token keyword\">this</span><span class=\"token punctuation\">.</span>handleInputChange<span class=\"token punctuation\">.</span><span class=\"token function\">bind</span><span class=\"token punctuation\">(</span><span class=\"token keyword\">this</span><span class=\"token punctuation\">,</span> <span class=\"token string\">'content'</span><span class=\"token punctuation\">)</span> <span class=\"token punctuation\">}</span> \r\n                placeholder<span class=\"token operator\">=</span><span class=\"token string\">\"Content\"</span> \r\n                componentClass<span class=\"token operator\">=</span><span class=\"token string\">\"textarea\"</span> \r\n                value<span class=\"token operator\">=</span><span class=\"token punctuation\">{</span> <span class=\"token keyword\">this</span><span class=\"token punctuation\">.</span>props<span class=\"token punctuation\">.</span>data<span class=\"token punctuation\">.</span>form_data<span class=\"token punctuation\">.</span>content <span class=\"token punctuation\">}</span>\r\n              <span class=\"token operator\">&gt;</span>\r\n              <span class=\"token operator\">&lt;</span><span class=\"token operator\">/</span>FormControl<span class=\"token operator\">&gt;</span>\r\n            <span class=\"token operator\">&lt;</span><span class=\"token operator\">/</span>FormGroup<span class=\"token operator\">&gt;</span>\r\n            <span class=\"token operator\">&lt;</span>Button\r\n                bsSize<span class=\"token operator\">=</span><span class=\"token string\">\"large\"</span>\r\n                bsStyle<span class=\"token operator\">=</span><span class=\"token string\">\"primary\"</span>\r\n                type<span class=\"token operator\">=</span><span class=\"token string\">\"submit\"</span>\r\n                className<span class=\"token operator\">=</span><span class=\"token punctuation\">{</span> data<span class=\"token punctuation\">.</span>is_saving <span class=\"token operator\">?</span> <span class=\"token string\">'disabled'</span> <span class=\"token punctuation\">:</span> <span class=\"token string\">''</span> <span class=\"token punctuation\">}</span>\r\n             <span class=\"token operator\">&gt;</span>\r\n                <span class=\"token punctuation\">{</span> data<span class=\"token punctuation\">.</span>is_saving <span class=\"token operator\">?</span> <span class=\"token string\">'Saving...'</span> <span class=\"token punctuation\">:</span> <span class=\"token string\">'Save post'</span> <span class=\"token punctuation\">}</span>\r\n             <span class=\"token operator\">&lt;</span><span class=\"token operator\">/</span>Button<span class=\"token operator\">&gt;</span>\r\n           <span class=\"token operator\">&lt;</span><span class=\"token operator\">/</span>form<span class=\"token operator\">&gt;</span>\r\n         <span class=\"token operator\">&lt;</span><span class=\"token operator\">/</span>div<span class=\"token operator\">&gt;</span>\r\n         <span class=\"token punctuation\">{</span> posts_area <span class=\"token punctuation\">}</span>\r\n       <span class=\"token operator\">&lt;</span><span class=\"token operator\">/</span>div<span class=\"token operator\">&gt;</span>\r\n     <span class=\"token punctuation\">)</span>\r\n   <span class=\"token punctuation\">}</span>\r\n <span class=\"token punctuation\">}</span></code></pre><p>You'll notice there's a lot of stuff happening in this file. &nbsp;Starting from render, our app will default to its Loading state if the data has not yet come back from Cosmic JS. &nbsp;If there are posts returned, the posts array will map into it's own returned row with a <code class=\"  language-javascript\">post<span class=\"token punctuation\">.</span>title</code>, <code class=\"  language-javascript\">post<span class=\"token punctuation\">.</span>content</code> and an \"x\" to remove the post. &nbsp;In the return statement we also have a form to add more posts and a way to generate a saving state when <code class=\"  language-javascript\">data<span class=\"token punctuation\">.</span>is_saving</code>.</p><p>Also notice at the top of the component we have a decorator care of MobX that will watch over the component observing any changes in state and passing the new rendered data down. &nbsp;What the heck is that thing you ask? &nbsp;I have no idea, it just works and it's awesome.</p><p>You'll also notice that we have some actions <code class=\"  language-javascript\">handleInputChange</code> which will set our state of our input fields, so we don't have to use refs (which I recommend against whenever possible), <code class=\"  language-javascript\">handleSubmit</code> to save our post, <code class=\"  language-javascript\">handleRemoveClick</code> to remove the post. &nbsp;The last two actions use the <a href=\"https://www.npmjs.com/package/cosmicjs\" target=\"_blank\">Cosmic JS NPM package</a> to add and remove the posts to the <a href=\"https://cosmicjs.com\" target=\"_blank\">CMS API</a>. &nbsp;We're also using <a href=\"https://www.npmjs.com/package/shorti\" target=\"_blank\">Shorti</a> to easily add inline styles to our components.</p><p>Finally let's add the following to our <code class=\"  language-markup\">AppState.js</code> file:<br></p>\r\n<pre class=\"  language-javascript\"><code class=\"  language-javascript\"><span class=\"token keyword\">import</span> <span class=\"token punctuation\">{</span> observable <span class=\"token punctuation\">}</span> <span class=\"token keyword\">from</span> <span class=\"token string\">'mobx'</span>\r\n<span class=\"token keyword\">import</span> <span class=\"token punctuation\">{</span> getObjects <span class=\"token punctuation\">}</span> <span class=\"token keyword\">from</span> <span class=\"token string\">'cosmicjs'</span>\r\n<span class=\"token keyword\">import</span> config <span class=\"token keyword\">from</span> <span class=\"token string\">'../config'</span>\r\n\r\n<span class=\"token keyword\">export</span> <span class=\"token keyword\">default</span> <span class=\"token keyword\">class</span> <span class=\"token class-name\">AppState</span> <span class=\"token punctuation\">{</span>\r\n  @observable posts <span class=\"token operator\">=</span> <span class=\"token punctuation\">[</span><span class=\"token punctuation\">]</span>\r\n  @observable form_data <span class=\"token operator\">=</span> <span class=\"token punctuation\">{</span><span class=\"token punctuation\">}</span>\r\n  @observable is_loading <span class=\"token operator\">=</span> <span class=\"token boolean\">true</span>\r\n  @observable is_saving <span class=\"token operator\">=</span> <span class=\"token boolean\">false</span>\r\n  <span class=\"token function\">addPost</span><span class=\"token punctuation\">(</span>post<span class=\"token punctuation\">)</span> <span class=\"token punctuation\">{</span>\r\n    <span class=\"token keyword\">this</span><span class=\"token punctuation\">.</span>posts<span class=\"token punctuation\">.</span><span class=\"token function\">unshift</span><span class=\"token punctuation\">(</span>post<span class=\"token punctuation\">)</span>\r\n  <span class=\"token punctuation\">}</span>\r\n  <span class=\"token function\">removePost</span><span class=\"token punctuation\">(</span>post_id<span class=\"token punctuation\">)</span> <span class=\"token punctuation\">{</span>\r\n    <span class=\"token keyword\">this</span><span class=\"token punctuation\">.</span>posts <span class=\"token operator\">=</span> <span class=\"token keyword\">this</span><span class=\"token punctuation\">.</span>posts<span class=\"token punctuation\">.</span><span class=\"token function\">filter</span><span class=\"token punctuation\">(</span>post <span class=\"token operator\">=</span><span class=\"token operator\">&gt;</span> <span class=\"token punctuation\">{</span>\r\n      <span class=\"token keyword\">return</span> post<span class=\"token punctuation\">.</span>_id <span class=\"token operator\">!==</span> post_id\r\n    <span class=\"token punctuation\">}</span><span class=\"token punctuation\">)</span>\r\n  <span class=\"token punctuation\">}</span>\r\n  <span class=\"token function\">constructor</span><span class=\"token punctuation\">(</span><span class=\"token punctuation\">)</span> <span class=\"token punctuation\">{</span>\r\n    <span class=\"token function\">getObjects</span><span class=\"token punctuation\">(</span><span class=\"token punctuation\">{</span> bucket<span class=\"token punctuation\">:</span> config<span class=\"token punctuation\">.</span>cosmicjs<span class=\"token punctuation\">.</span>bucket <span class=\"token punctuation\">}</span><span class=\"token punctuation\">,</span> <span class=\"token punctuation\">(</span>err<span class=\"token punctuation\">,</span> res<span class=\"token punctuation\">)</span> <span class=\"token operator\">=</span><span class=\"token operator\">&gt;</span> <span class=\"token punctuation\">{</span>\r\n      <span class=\"token keyword\">if</span> <span class=\"token punctuation\">(</span>res<span class=\"token punctuation\">.</span>objects<span class=\"token punctuation\">.</span>type<span class=\"token punctuation\">.</span>posts<span class=\"token punctuation\">)</span> <span class=\"token punctuation\">{</span>\r\n        <span class=\"token keyword\">this</span><span class=\"token punctuation\">.</span>posts <span class=\"token operator\">=</span> res<span class=\"token punctuation\">.</span>objects<span class=\"token punctuation\">.</span>type<span class=\"token punctuation\">.</span>posts\r\n        <span class=\"token keyword\">this</span><span class=\"token punctuation\">.</span>is_loading <span class=\"token operator\">=</span> <span class=\"token boolean\">false</span>\r\n      <span class=\"token punctuation\">}</span>\r\n    <span class=\"token punctuation\">}</span><span class=\"token punctuation\">)</span>\r\n  <span class=\"token punctuation\">}</span>\r\n<span class=\"token punctuation\">}</span></code></pre>\r\n<p>Here we tell the MobX observable decorators which state values may possibly change.  For our app this includes the posts, the form data, loading and saving states.  We also have created a couple functions to add and remove posts from our application.  The constructor fires the initial call to Cosmic JS to get our posts.</p><p><span style=\"line-height: 1.42857;\">How great is this?! &nbsp;Notice what we </span><span style=\"line-height: 1.42857; font-weight: bold;\">didn't</span><span style=\"line-height: 1.42857;\"> have to add to our app to handle state? &nbsp;We didn't create several files of boilerplate or event emitters, just simple decorators in key parts of the app to observe state changes!</span></p><p>Now let's start up our app! &nbsp;In your terminal run the following:<br>\r\n</p><pre class=\"  language-markup\"><code class=\"  language-markup\">npm start</code></pre><br>\r\n<p>Navigate to http://localhost:3000 and you should see your Easy MobX Example app in all its glory! &nbsp;I hope you enjoyed this post as much as I&nbsp;enjoyed&nbsp;building the example app. &nbsp;<a href=\"https://twitter.com/tonyspiro\" target=\"_blank\">Follow me on twitter</a> and reach out with any questions below. &nbsp;Thanks!</p>",
+        "metafields": [
+          {
+            "value": "",
+            "key": "wp-id",
+            "title": "WP ID",
+            "type": "text",
+            "children": false
+          },
+          {
+            "value": "2016-06-23",
+            "key": "published",
+            "title": "Published",
+            "type": "date",
+            "children": false
+          },
+          {
+            "object_type": "authors",
+            "value": "5712bb5de9c686d006000013",
+            "key": "author",
+            "title": "Author",
+            "type": "object",
+            "children": false
+          },
+          {
+            "value": "d2f15eb0-38a2-11e6-b9c1-cd06b34cd6eb-state-of-chaos.png",
+            "key": "hero",
+            "title": "Hero",
+            "type": "file",
+            "children": false
+          },
+          {
+            "value": "",
+            "key": "tag",
+            "title": "Tag",
+            "type": "text",
+            "children": false
+          },
+          {
+            "value": "<p>Is your state out of control? &nbsp;Get to a better state.<br></p>",
+            "key": "teaser",
+            "title": "Teaser",
+            "type": "html-textarea",
+            "children": false
+          }
+        ],
+        "bucket": "56edeedd694d9a5e6f000031",
+        "type_slug": "posts",
+        "created": "2016-06-22T17:47:47.732Z",
+        "user_id": "5357ef811693be2118000001",
+        "options": {
+          "slug_field": 0,
+          "content_editor": 1,
+          "add_metafields": 0,
+          "metafields_title": 0,
+          "metafields_key": 0
+        },
+        "status": "published",
+        "modified": "2016-06-23T17:38:08.155Z"
+      },
+      {
         "_id": "5712b6c5e9c686d006000011",
         "order": 1,
         "slug": "nav",
@@ -405,6 +475,77 @@
         "options": null,
         "status": "published",
         "modified": "2016-04-17T13:53:51.483Z"
+      },
+      {
+        "_id": "57202412303fc3c437000001",
+        "order": 1,
+        "slug": "how-i-moved-my-blog-from-wordpress-to-cosmic-js",
+        "title": "How I Moved My Blog From WordPress to Cosmic JS",
+        "content": "<p>In this post I will tell you how I migrated my blog content from WordPress to its new happy cloud-content-powered home on <a href=\"https://cosmicjs.com\" target=\"_blank\">Cosmic JS</a>.</p><h4>Export from WordPress</h4><p>The first step I had to take was to export the data out of my old blog. &nbsp;Since Cosmic JS makes it super easy to import data into a bucket, all I had to do was find a WordPress plugin that exports WordPress data into a JSON file that is properly formatted to import into a Cosmic JS bucket. &nbsp;Luckily such a plugin exists :) <a href=\"https://github.com/cosmicjs/cosmicjs-wp-export\" target=\"_blank\">https://github.com/cosmicjs/cosmicjs-wp-export</a>. &nbsp;After installing the plugin, all I had to do was select which post types I wanted to export then click export. &nbsp;This gave me one JSON file with all of the data I needed to perform the migration into Cosmic JS.</p><h4>Import into Cosmic JS</h4><p>The next step was importing the data into Cosmic JS. &nbsp;To import into a new bucket, I created a new bucket and navigated to Bucket &gt; Settings &gt; Import / Export Data. &nbsp;Then I just dragged the JSON file that I exported from WP onto the page and within seconds my data (AND FILES!) were imported into my bucket. &nbsp;(Plugins are not imported)</p><h4>Build the new blog app</h4><p><span style=\"line-height: 1.42857;\">My next task was to build a new blog app. &nbsp;The app I chose was the Future Imperfect app available on the <a href=\"https://cosmicjs.com/apps\" target=\"_blank\">Cosmic JS Apps page</a>. &nbsp;It has a sleek, modern front end (designed by <a href=\"https://twitter.com/n33co\" target=\"_blank\">@n33co</a> at <a href=\"http://html5up.net\" target=\"_blank\">HTML5UP.net</a>) and is built on top of a light-weight Node.js server (goodbye PHP!). &nbsp;I forked the Future Imperfect app from <a href=\"https://github.com/cosmicjs/cosmicapp-future-imperfect\" target=\"_blank\">the GitHub repo</a> and edited it to suite my needs. &nbsp;<a href=\"https://www.npmjs.com/package/cosmicjs\" target=\"_blank\">The Cosmic JS NPM module </a>made it easy to pull the content in from the Cosmic JS API into its new JavaScript backend. &nbsp;The mustache templates (Hogan) became the perfect compliment with the name-spaced object properties provided by the Cosmic JS JavaScript client, for example: &nbsp;{{ cosmic.object.nav.metafield.site-title.value }}, how easy is that?!?</span><br></p><h4><span style=\"line-height: 1.42857;\">Deploy!</span></h4><p><span style=\"line-height: 1.42857;\">The next and final step was to deploy the application for the world to see and marvel! &nbsp;I decided to deploy my new blog app using the deploy feature in my Cosmic JS bucket. &nbsp;The path to do so is Bucket &gt; Settings &gt; Deploy Web App. &nbsp;It was really easy to add <a href=\"https://github.com/tonyspiro/tonyspiro.com\" target=\"_blank\">the public GitHub url for my new blog</a> and click Deploy! &nbsp;Within a few minutes my new blog was deployed and out in the world.</span></p><p><span style=\"line-height: 1.42857;\">I'm happy to say that the blog you are reading right now is built on this new easy-to-manage, fast Node.js / Cosmic JS application stack! &nbsp;With this new setup my blog is now much faster and performs much better on page speed tests. &nbsp;This is because my blog now runs on a light server / <a href=\"https://cosmicjs.com\" target=\"_blank\">CMS API</a> stack rather than a heavy stack of installed applications and plugins.</span><br></p><p><span style=\"line-height: 1.42857;\">I hope you've enjoyed my story of how I freed my content from the confines of an installed CMS. &nbsp;<a href=\"https://cosmicjs.com/signup\" target=\"_blank\">Create a free Cosmic JS account</a> today and see how easy it is to free <span style=\"font-weight: bold;\">your</span> content! &nbsp;Let me know if you have any questions or comments in the comment section below. &nbsp;You can also <a href=\"https://twitter.com/tonyspiro\" target=\"_blank\">reach out to me on Twitter</a>.</span><br></p>",
+        "metafields": [
+          {
+            "edit": 1,
+            "value": "",
+            "key": "wp-id",
+            "title": "WP ID",
+            "type": "text",
+            "children": false
+          },
+          {
+            "edit": 1,
+            "value": "2016-04-27",
+            "key": "published",
+            "title": "Published",
+            "type": "date",
+            "children": false
+          },
+          {
+            "object_type": "authors",
+            "edit": 1,
+            "value": "5712bb5de9c686d006000013",
+            "key": "author",
+            "title": "Author",
+            "type": "object",
+            "children": false
+          },
+          {
+            "edit": 1,
+            "value": "cdd0c5f0-0c2a-11e6-8b51-a94dba6d5176-freedom.png",
+            "key": "hero",
+            "title": "Hero",
+            "type": "file",
+            "children": false
+          },
+          {
+            "edit": 1,
+            "value": "Free your content and build a better tomorrow, today!",
+            "key": "tag",
+            "title": "Tag",
+            "type": "text",
+            "children": false
+          },
+          {
+            "edit": 1,
+            "value": "<p><br></p>",
+            "key": "teaser",
+            "title": "Teaser",
+            "type": "html-textarea",
+            "children": false
+          }
+        ],
+        "bucket": "56edeedd694d9a5e6f000031",
+        "type_slug": "posts",
+        "created": "2016-04-27T02:29:38.348Z",
+        "user_id": "5357ef811693be2118000001",
+        "options": {
+          "slug_field": 0,
+          "content_editor": 1,
+          "add_metafields": 0,
+          "metafields_title": 0,
+          "metafields_key": 0
+        },
+        "status": "published",
+        "modified": "2016-04-27T17:16:32.658Z"
       },
       {
         "_id": "5712b63fe9c686d006000010",
@@ -494,6 +635,110 @@
         "status": "published"
       },
       {
+        "_id": "56edefbee6dcdbb57000002f",
+        "old_id": "56edefbe952f68b570a025e2",
+        "bucket": "56edeedd694d9a5e6f000031",
+        "slug": "onec1ty-nashville",
+        "title": "OneC1TY Nashville",
+        "content": "This was a really fun site built on the WordPress platform over at <a href=\"http://brandhatchery.com\" target=\"_blank\">The Brand Hatchery</a>. I'm proud of this custom theme built using Bootstrap because we used different development and production environments that made it easy to debug in development and easy to deploy to production. We included Gulp into our workflow to manage our LESS, JS minification and other processes. It uses a <a href=\"https://github.com/tonyspiro/react-typeahead-search\" target=\"\">React JS auto-complete search</a> feature to search all of the site's content in an Apple Spotlight way, which I think turned out pretty cool.\r\n\r\nCheck it out:\r\n\r\n<a href=\"http://www.onec1tynashville.com\" target=\"_blank\">http://www.onec1tynashville.com</a>\r\n<a href=\"http://www.onec1tynashville.com\" target=\"_blank\"><img class=\"alignnone size-full wp-image-766\" src=\"https://cosmicjs.com/uploads/4f8076b0-ee33-11e5-9838-d35c110ee128.png\" alt=\"onec1ty\"></a>",
+        "metafields": [
+          {
+            "edit": 1,
+            "value": "362f74d0-04aa-11e6-8e50-dd42082f9224-Screen Shot 2016-04-17 at 9.39.19 AM.png",
+            "key": "thumb",
+            "title": "Thumb",
+            "type": "file",
+            "children": false
+          },
+          {
+            "edit": 1,
+            "value": "<p>A new website for a new health-minded community in Nashville.</p>",
+            "key": "excerpt",
+            "title": "Excerpt",
+            "type": "html-textarea",
+            "children": false
+          }
+        ],
+        "type_slug": "work",
+        "created": "2016-03-20T00:33:02.461Z",
+        "user_id": "5357ef811693be2118000001",
+        "options": null,
+        "order": 3,
+        "modified": "2016-04-17T21:52:42.189Z",
+        "status": "published"
+      },
+      {
+        "_id": "56edefbee6dcdbb570000002",
+        "old_id": "56edefbe952f68b570a025b5",
+        "bucket": "56edeedd694d9a5e6f000031",
+        "slug": "about",
+        "title": "About",
+        "content": "Hello I'm Tony Spiro, a software engineer specializing in front end and back end JavaScript. I am currently the Senior Interactive Developer at <a href=\"https://rechat.com\" target=\"_blank\">Rechat</a>, in charge of building out the web platform. &nbsp;I'm also the creator of <a href=\"https://cosmicjs.com\" target=\"_blank\">Cosmic JS</a> a CMS API that is used to manage content for websites and native applications. &nbsp;This website is powered by Cosmic JS and you can view the <a href=\"https://github.com/tonyspiro/tonyspiro.com\" target=\"_blank\">full source code on GitHub</a>.<div><br></div><div>I have previously worked at digital agencies building websites and apps using JavaScript and the LAMP stack. &nbsp;I am highly skilled in PHP, MySQL, JavaScript,&nbsp;JQuery, AJAX, HTML5, CSS3 as well as MongoDB and Twitter Bootstrap. I also have a lot of experience with open source CMS frameworks, database architecture, e-commerce solutions, connecting API services, responsive design and Git for version control.&nbsp;<div><br></div><div><a href=\"/work\">Click here to check out some of my work</a>.&nbsp;</div><div><a href=\"https://github.com/tonyspiro\" target=\"_blank\">And click here to check out my GitHub for more code examples.</a>&nbsp;<div><br></div><div>I'm also a drummer with a passion for music. I began my career building websites and apps for my local music scene.\r\n\r\nI live in Dallas, TX with my beautiful wife Jena and our adopted dog, Buddy. When I'm not coding projects or spending time with my loving family, I will spend time sharing some things I've picked up along the way on this blog. Hopefully my posts will help you in your journey like many great blogs / developers / authors have helped me in mine.&nbsp;</div><div><br></div><div>Cheers!</div><div>Tony</div></div></div>",
+        "metafields": [
+          {
+            "value": "Welcome to my blog! &nbsp;I'm Tony Spiro, a software engineer specializing in front end and back end JavaScript using React and Node.js. &nbsp;<a href=\"/about\" target=\"\">Read more...</a>",
+            "key": "excerpt",
+            "title": "Excerpt",
+            "type": "html-textarea",
+            "children": false
+          },
+          {
+            "value": "<p><br></p>",
+            "key": "teaser",
+            "title": "Teaser",
+            "type": "html-textarea",
+            "children": false
+          },
+          {
+            "value": "",
+            "key": "thumb",
+            "title": "Thumb",
+            "type": "file",
+            "children": false
+          }
+        ],
+        "type_slug": "pages",
+        "created": "2016-03-20T00:33:02.354Z",
+        "user_id": "5357ef811693be2118000001",
+        "options": null,
+        "order": 3,
+        "modified": "2016-06-23T14:05:29.631Z",
+        "status": "published"
+      },
+      {
+        "_id": "56edefbee6dcdbb570000004",
+        "old_id": "56edefbe952f68b570a025b7",
+        "bucket": "56edeedd694d9a5e6f000031",
+        "slug": "contact",
+        "title": "Contact",
+        "content": "Do you have any questions or want me to help you with a project?&nbsp; Hit me up at <a href=\"mailto:tspiro@tonyspiro.com\">tspiro@tonyspiro.com</a>",
+        "metafields": [
+          {
+            "edit": 1,
+            "value": "<p><br></p>",
+            "key": "teaser",
+            "title": "Teaser",
+            "type": "html-textarea",
+            "children": false
+          },
+          {
+            "edit": 1,
+            "value": "",
+            "key": "thumb",
+            "title": "Thumb",
+            "type": "file",
+            "children": false
+          }
+        ],
+        "type_slug": "pages",
+        "created": "2016-03-20T00:33:02.357Z",
+        "user_id": "5357ef811693be2118000001",
+        "options": null,
+        "order": 4,
+        "modified": "2016-04-18T04:17:34.033Z",
+        "status": "published"
+      },
+      {
         "_id": "56edefbee6dcdbb570000028",
         "old_id": "56edefbe952f68b570a025db",
         "bucket": "56edeedd694d9a5e6f000031",
@@ -547,21 +792,21 @@
         "created": "2016-03-20T00:33:02.455Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 2,
+        "order": 4,
         "modified": "2016-04-17T18:47:57.067Z",
         "status": "published"
       },
       {
-        "_id": "56edefbee6dcdbb57000002f",
-        "old_id": "56edefbe952f68b570a025e2",
+        "_id": "56edefbee6dcdbb57000002e",
+        "old_id": "56edefbe952f68b570a025e1",
         "bucket": "56edeedd694d9a5e6f000031",
-        "slug": "onec1ty-nashville",
-        "title": "OneC1TY Nashville",
-        "content": "This was a really fun site built on the WordPress platform over at <a href=\"http://brandhatchery.com\" target=\"_blank\">The Brand Hatchery</a>. I'm proud of this custom theme built using Bootstrap because we used different development and production environments that made it easy to debug in development and easy to deploy to production. We included Gulp into our workflow to manage our LESS, JS minification and other processes. It uses a <a href=\"https://github.com/tonyspiro/react-typeahead-search\" target=\"\">React JS auto-complete search</a> feature to search all of the site's content in an Apple Spotlight way, which I think turned out pretty cool.\r\n\r\nCheck it out:\r\n\r\n<a href=\"http://www.onec1tynashville.com\" target=\"_blank\">http://www.onec1tynashville.com</a>\r\n<a href=\"http://www.onec1tynashville.com\" target=\"_blank\"><img class=\"alignnone size-full wp-image-766\" src=\"https://cosmicjs.com/uploads/4f8076b0-ee33-11e5-9838-d35c110ee128.png\" alt=\"onec1ty\"></a>",
+        "slug": "barnes-roberts",
+        "title": "Barnes and Roberts",
+        "content": "This is another website that was built on the WordPress platform over at <a href=\"http://brandhatchery.com\" target=\"_blank\">The Brand Hatchery</a>. &nbsp;This one really came together nicely: It's responsive across all devices, cross-browser compatible and has some challenging&nbsp;functionality that was executed well&nbsp;(see the people page).\r\n\r\nCheck it out (warning:&nbsp;audio plays automatically (client request :)))\r\n<a href=\"http://www.brtrial.com/\" target=\"_blank\">\r\nhttp://www.brtrial.com</a><div><br><div><a href=\"http://www.brtrial.com/\" target=\"_blank\"></a><a href=\"http://www.brtrial.com/\" target=\"_blank\"><img class=\"alignnone size-full wp-image-763\" src=\"https://cosmicjs.com/uploads/8f5413e0-04e6-11e6-8e50-dd42082f9224-Screen-Shot-2014-08-11-at-9.51.15-PM.png\" alt=\"Screen Shot 2015-06-16 at 7.39.11 PM\"></a></div></div>",
         "metafields": [
           {
             "edit": 1,
-            "value": "362f74d0-04aa-11e6-8e50-dd42082f9224-Screen Shot 2016-04-17 at 9.39.19 AM.png",
+            "value": "e97e4a40-04ad-11e6-8e50-dd42082f9224-Screen Shot 2016-04-17 at 10.05.41 AM.png",
             "key": "thumb",
             "title": "Thumb",
             "type": "file",
@@ -569,7 +814,7 @@
           },
           {
             "edit": 1,
-            "value": "<p>A new website for a new health-minded community in Nashville.</p>",
+            "value": "<p>A new website for a leading provider of trial services.</p>",
             "key": "excerpt",
             "title": "Excerpt",
             "type": "html-textarea",
@@ -577,52 +822,44 @@
           }
         ],
         "type_slug": "work",
-        "created": "2016-03-20T00:33:02.461Z",
+        "created": "2016-03-20T00:33:02.460Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 3,
-        "modified": "2016-04-17T21:52:42.189Z",
+        "order": 4,
+        "modified": "2016-04-17T21:53:02.628Z",
         "status": "published"
       },
       {
-        "_id": "56edefbee6dcdbb570000002",
-        "old_id": "56edefbe952f68b570a025b5",
+        "_id": "56edefbee6dcdbb57000002d",
+        "old_id": "56edefbe952f68b570a025e0",
         "bucket": "56edeedd694d9a5e6f000031",
-        "slug": "about",
-        "title": "About",
-        "content": "Hello I'm Tony Spiro, a software engineer specializing in front end and back end JavaScript. I am currently the Senior Interactive Developer at a stealth startup, in charge of building out the React web application. &nbsp;I'm also the creator of <a href=\"https://cosmicjs.com\" target=\"_blank\">Cosmic JS</a> a CMS API that is used to manage content for websites and native applications. &nbsp;This website is powered by Cosmic JS and you can view the <a href=\"https://github.com/tonyspiro/tonyspiro.com\" target=\"_blank\">full source code on GitHub</a>.<div><br></div><div>I have previously worked at digital agencies building websites and apps using JavaScript and the LAMP stack. &nbsp;I am highly skilled in PHP, MySQL, JavaScript,&nbsp;JQuery, AJAX, HTML5, CSS3 as well as MongoDB and Twitter Bootstrap. I also have a lot of experience with open source CMS frameworks, database architecture, e-commerce solutions, connecting API services, responsive design and Git for version control.&nbsp;<div><br></div><div><a href=\"/work\">Click here to check out some of my work</a>.&nbsp;</div><div><a href=\"https://github.com/tonyspiro\" target=\"_blank\">And click here to check out my GitHub for more code examples.</a>&nbsp;<div><br></div><div>I'm also a drummer with a passion for music. I began my career building websites and apps for my local music scene.\r\n\r\nI live in Dallas, TX with my beautiful wife Jena and our adopted dog, Buddy. When I'm not coding projects or spending time with my loving family, I will spend time sharing some things I've picked up along the way on this blog. Hopefully my posts will help you in your journey like many great blogs / developers / authors have helped me in mine.&nbsp;</div><div><br></div><div>Cheers!</div><div>Tony</div></div></div>",
+        "slug": "cambridge",
+        "title": "Cambridge",
+        "content": "This is another custom WordPress site that was built by myself and the development team at The Brand Hatchery. The challenge was to build this really cool long scrolly page and have it load fast. I think we achieved this and it turned out to be a really good project.  <a href=\"http://cambridgeinc.com\" target=\"_blank\">http://cambridgeinc.com</a>\r\n<a href=\"http://cambridgeinc.com\" target=\"_blank\"><img src=\"https://cosmicjs.com/uploads/929f9560-04e6-11e6-8e50-dd42082f9224-Screen-Shot-2015-04-12-at-9.19.49-AM.png\" alt=\"Screen Shot 2015-04-12 at 9.19.49 AM\"></a>",
         "metafields": [
           {
             "edit": 1,
-            "value": "Welcome to my blog! &nbsp;I'm Tony Spiro, a software engineer specializing in front end and back end JavaScript using React and Node.js. &nbsp;<a href=\"/about\" target=\"\">Read more...</a>",
-            "key": "excerpt",
-            "title": "Excerpt",
-            "type": "html-textarea",
+            "value": "eb87ca80-04dc-11e6-8e50-dd42082f9224-Screen Shot 2016-04-17 at 3.42.12 PM.png",
+            "key": "thumb",
+            "title": "Thumb",
+            "type": "file",
             "children": false
           },
           {
             "edit": 1,
             "value": "<p><br></p>",
-            "key": "teaser",
-            "title": "Teaser",
+            "key": "excerpt",
+            "title": "Excerpt",
             "type": "html-textarea",
-            "children": false
-          },
-          {
-            "edit": 1,
-            "value": "",
-            "key": "thumb",
-            "title": "Thumb",
-            "type": "file",
             "children": false
           }
         ],
-        "type_slug": "pages",
-        "created": "2016-03-20T00:33:02.354Z",
+        "type_slug": "work",
+        "created": "2016-03-20T00:33:02.459Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 3,
-        "modified": "2016-04-18T16:51:42.833Z",
+        "order": 5,
+        "modified": "2016-04-17T21:53:28.720Z",
         "status": "published"
       },
       {
@@ -687,62 +924,29 @@
         "created": "2016-03-20T00:33:02.448Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 3,
+        "order": 5,
         "modified": "2016-04-18T01:07:35.114Z",
         "status": "published"
       },
       {
-        "_id": "56edefbee6dcdbb570000004",
-        "old_id": "56edefbe952f68b570a025b7",
+        "_id": "56edefbee6dcdbb57000002a",
+        "old_id": "56edefbe952f68b570a025dd",
         "bucket": "56edeedd694d9a5e6f000031",
-        "slug": "contact",
-        "title": "Contact",
-        "content": "Do you have any questions or want me to help you with a project?&nbsp; Hit me up at <a href=\"mailto:tspiro@tonyspiro.com\">tspiro@tonyspiro.com</a>",
+        "slug": "corgan",
+        "title": "Corgan",
+        "content": "<a href=\"http://www.corgan.com/\" target=\"_blank\"><img src=\"https://cosmicjs.com/uploads/94a1ce00-04e6-11e6-8e50-dd42082f9224-Screen-Shot-2014-04-22-at-6.48.27-PM.png\"></a>&nbsp;<div><br></div><div>&nbsp;This is another site designed and built at <a href=\"http://brandhatchery.com\" target=\"_blank\">The Brand Hatchery</a>. &nbsp;It is built on the Wordpress CMS using a custom responsive theme. &nbsp;I have to say this is one of the best sites we've done so far. &nbsp;The responsive elements came together very nicely and all of the backend management was done to make it really easy for the client to edit whatever they needed to.\r\n\r\nI'm also pretty proud of the \"What's My Day Like?\" animation sequences we were able to pull off in the Carrers sections. &nbsp;Take a look (near the bottom of the page):\r\n\r\n<a href=\"http://www.corgan.com/careers/experience/\" target=\"_blank\">&nbsp;http://www.corgan.com/careers/experience/</a>\r\n\r\nAlso since the hero images on each page were so large, I made use of a <a href=\"http://tonyspiro.com/dynamic-image-a-jquery-plugin-that-progressively-resizes-your-images-based-on-browser-size/\">responsive image JQuery plugin</a> I built to handle dynamic images for different device sizes to maximize loading time.</div>",
         "metafields": [
+          {
+            "edit": 1,
+            "value": "b0783410-04dd-11e6-8e50-dd42082f9224-logo1_new.png",
+            "key": "thumb",
+            "title": "Thumb",
+            "type": "file",
+            "children": false
+          },
           {
             "edit": 1,
             "value": "<p><br></p>",
-            "key": "teaser",
-            "title": "Teaser",
-            "type": "html-textarea",
-            "children": false
-          },
-          {
-            "edit": 1,
-            "value": "",
-            "key": "thumb",
-            "title": "Thumb",
-            "type": "file",
-            "children": false
-          }
-        ],
-        "type_slug": "pages",
-        "created": "2016-03-20T00:33:02.357Z",
-        "user_id": "5357ef811693be2118000001",
-        "options": null,
-        "order": 4,
-        "modified": "2016-04-18T04:17:34.033Z",
-        "status": "published"
-      },
-      {
-        "_id": "56edefbee6dcdbb57000002e",
-        "old_id": "56edefbe952f68b570a025e1",
-        "bucket": "56edeedd694d9a5e6f000031",
-        "slug": "barnes-roberts",
-        "title": "Barnes and Roberts",
-        "content": "This is another website that was built on the WordPress platform over at <a href=\"http://brandhatchery.com\" target=\"_blank\">The Brand Hatchery</a>. &nbsp;This one really came together nicely: It's responsive across all devices, cross-browser compatible and has some challenging&nbsp;functionality that was executed well&nbsp;(see the people page).\r\n\r\nCheck it out (warning:&nbsp;audio plays automatically (client request :)))\r\n<a href=\"http://www.brtrial.com/\" target=\"_blank\">\r\nhttp://www.brtrial.com</a><div><br><div><a href=\"http://www.brtrial.com/\" target=\"_blank\"></a><a href=\"http://www.brtrial.com/\" target=\"_blank\"><img class=\"alignnone size-full wp-image-763\" src=\"https://cosmicjs.com/uploads/8f5413e0-04e6-11e6-8e50-dd42082f9224-Screen-Shot-2014-08-11-at-9.51.15-PM.png\" alt=\"Screen Shot 2015-06-16 at 7.39.11 PM\"></a></div></div>",
-        "metafields": [
-          {
-            "edit": 1,
-            "value": "e97e4a40-04ad-11e6-8e50-dd42082f9224-Screen Shot 2016-04-17 at 10.05.41 AM.png",
-            "key": "thumb",
-            "title": "Thumb",
-            "type": "file",
-            "children": false
-          },
-          {
-            "edit": 1,
-            "value": "<p>A new website for a leading provider of trial services.</p>",
             "key": "excerpt",
             "title": "Excerpt",
             "type": "html-textarea",
@@ -750,11 +954,11 @@
           }
         ],
         "type_slug": "work",
-        "created": "2016-03-20T00:33:02.460Z",
+        "created": "2016-03-20T00:33:02.456Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 4,
-        "modified": "2016-04-17T21:53:02.628Z",
+        "order": 6,
+        "modified": "2016-04-17T21:54:21.020Z",
         "status": "published"
       },
       {
@@ -819,21 +1023,21 @@
         "created": "2016-03-20T00:33:02.447Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 4,
+        "order": 6,
         "modified": "2016-04-18T01:19:23.862Z",
         "status": "published"
       },
       {
-        "_id": "56edefbee6dcdbb57000002d",
-        "old_id": "56edefbe952f68b570a025e0",
+        "_id": "56edefbee6dcdbb57000002b",
+        "old_id": "56edefbe952f68b570a025de",
         "bucket": "56edeedd694d9a5e6f000031",
-        "slug": "cambridge",
-        "title": "Cambridge",
-        "content": "This is another custom WordPress site that was built by myself and the development team at The Brand Hatchery. The challenge was to build this really cool long scrolly page and have it load fast. I think we achieved this and it turned out to be a really good project.  <a href=\"http://cambridgeinc.com\" target=\"_blank\">http://cambridgeinc.com</a>\r\n<a href=\"http://cambridgeinc.com\" target=\"_blank\"><img src=\"https://cosmicjs.com/uploads/929f9560-04e6-11e6-8e50-dd42082f9224-Screen-Shot-2015-04-12-at-9.19.49-AM.png\" alt=\"Screen Shot 2015-04-12 at 9.19.49 AM\"></a>",
+        "slug": "deep-ellum-search-company",
+        "title": "Deep Ellum Search Company",
+        "content": "This was another site that I helped hand-craft at <a href=\"http://brandhatchery.com\" target=\"_blank\">The Brand Hatchery</a>. Using a custom Wordpress theme that we (The Brand Hatchery dev team) built from scratch, this single page site features a nice scrolling nav, custom google map skin and is fully responsive. Check it out:&nbsp;<div><br></div><div>&nbsp;\r\n<a href=\"http://www.deepellumsearch.com/\" target=\"_blank\"><img src=\"https://cosmicjs.com/uploads/8f5413e0-04e6-11e6-8e50-dd42082f9224-Screen-Shot-2014-08-11-at-9.51.15-PM.png\" alt=\"Screen Shot 2014-08-11 at 9.51.15 PM\"></a></div>",
         "metafields": [
           {
             "edit": 1,
-            "value": "eb87ca80-04dc-11e6-8e50-dd42082f9224-Screen Shot 2016-04-17 at 3.42.12 PM.png",
+            "value": "cb06c1c0-04dd-11e6-8e50-dd42082f9224-Screen Shot 2016-04-17 at 3.48.31 PM.png",
             "key": "thumb",
             "title": "Thumb",
             "type": "file",
@@ -849,11 +1053,11 @@
           }
         ],
         "type_slug": "work",
-        "created": "2016-03-20T00:33:02.459Z",
+        "created": "2016-03-20T00:33:02.458Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 5,
-        "modified": "2016-04-17T21:53:28.720Z",
+        "order": 7,
+        "modified": "2016-04-17T21:55:00.100Z",
         "status": "published"
       },
       {
@@ -918,21 +1122,21 @@
         "created": "2016-03-20T00:33:02.440Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 5,
+        "order": 7,
         "modified": "2016-04-17T23:18:26.571Z",
         "status": "published"
       },
       {
-        "_id": "56edefbee6dcdbb57000002a",
-        "old_id": "56edefbe952f68b570a025dd",
+        "_id": "56edefbee6dcdbb570000029",
+        "old_id": "56edefbe952f68b570a025dc",
         "bucket": "56edeedd694d9a5e6f000031",
-        "slug": "corgan",
-        "title": "Corgan",
-        "content": "<a href=\"http://www.corgan.com/\" target=\"_blank\"><img src=\"https://cosmicjs.com/uploads/94a1ce00-04e6-11e6-8e50-dd42082f9224-Screen-Shot-2014-04-22-at-6.48.27-PM.png\"></a>&nbsp;<div><br></div><div>&nbsp;This is another site designed and built at <a href=\"http://brandhatchery.com\" target=\"_blank\">The Brand Hatchery</a>. &nbsp;It is built on the Wordpress CMS using a custom responsive theme. &nbsp;I have to say this is one of the best sites we've done so far. &nbsp;The responsive elements came together very nicely and all of the backend management was done to make it really easy for the client to edit whatever they needed to.\r\n\r\nI'm also pretty proud of the \"What's My Day Like?\" animation sequences we were able to pull off in the Carrers sections. &nbsp;Take a look (near the bottom of the page):\r\n\r\n<a href=\"http://www.corgan.com/careers/experience/\" target=\"_blank\">&nbsp;http://www.corgan.com/careers/experience/</a>\r\n\r\nAlso since the hero images on each page were so large, I made use of a <a href=\"http://tonyspiro.com/dynamic-image-a-jquery-plugin-that-progressively-resizes-your-images-based-on-browser-size/\">responsive image JQuery plugin</a> I built to handle dynamic images for different device sizes to maximize loading time.</div>",
+        "slug": "brand-hatchery-holiday-card",
+        "title": "The Brand Hatchery Holiday Card",
+        "content": "<a href=\"http://brandhatchery.com/hohoho/2013/\" target=\"_blank\"><img src=\"https://cosmicjs.com/uploads/91f87ff0-04e6-11e6-8e50-dd42082f9224-Screen-Shot-2014-02-12-at-9.27.57-PM.png\"></a>This was a really fun project that lets the user whack a moving pinata to get the goodies inside. It is built from scratch with HTML5, JQuery and is responsive down to mobile. Check it out!\r\n\r\n<a href=\"http://brandhatchery.com/hohoho/2013/\">http://brandhatchery.com/hohoho/2013/</a>.",
         "metafields": [
           {
             "edit": 1,
-            "value": "b0783410-04dd-11e6-8e50-dd42082f9224-logo1_new.png",
+            "value": "41aa00d0-04de-11e6-8e50-dd42082f9224-ball.png",
             "key": "thumb",
             "title": "Thumb",
             "type": "file",
@@ -951,8 +1155,8 @@
         "created": "2016-03-20T00:33:02.456Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 6,
-        "modified": "2016-04-17T21:54:21.020Z",
+        "order": 8,
+        "modified": "2016-04-17T21:55:25.862Z",
         "status": "published"
       },
       {
@@ -1009,41 +1213,8 @@
         "created": "2016-03-20T00:33:02.415Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 6,
+        "order": 8,
         "modified": "2016-04-17T22:58:56.960Z",
-        "status": "published"
-      },
-      {
-        "_id": "56edefbee6dcdbb57000002b",
-        "old_id": "56edefbe952f68b570a025de",
-        "bucket": "56edeedd694d9a5e6f000031",
-        "slug": "deep-ellum-search-company",
-        "title": "Deep Ellum Search Company",
-        "content": "This was another site that I helped hand-craft at <a href=\"http://brandhatchery.com\" target=\"_blank\">The Brand Hatchery</a>. Using a custom Wordpress theme that we (The Brand Hatchery dev team) built from scratch, this single page site features a nice scrolling nav, custom google map skin and is fully responsive. Check it out:&nbsp;<div><br></div><div>&nbsp;\r\n<a href=\"http://www.deepellumsearch.com/\" target=\"_blank\"><img src=\"https://cosmicjs.com/uploads/8f5413e0-04e6-11e6-8e50-dd42082f9224-Screen-Shot-2014-08-11-at-9.51.15-PM.png\" alt=\"Screen Shot 2014-08-11 at 9.51.15 PM\"></a></div>",
-        "metafields": [
-          {
-            "edit": 1,
-            "value": "cb06c1c0-04dd-11e6-8e50-dd42082f9224-Screen Shot 2016-04-17 at 3.48.31 PM.png",
-            "key": "thumb",
-            "title": "Thumb",
-            "type": "file",
-            "children": false
-          },
-          {
-            "edit": 1,
-            "value": "<p><br></p>",
-            "key": "excerpt",
-            "title": "Excerpt",
-            "type": "html-textarea",
-            "children": false
-          }
-        ],
-        "type_slug": "work",
-        "created": "2016-03-20T00:33:02.458Z",
-        "user_id": "5357ef811693be2118000001",
-        "options": null,
-        "order": 7,
-        "modified": "2016-04-17T21:55:00.100Z",
         "status": "published"
       },
       {
@@ -1108,21 +1279,21 @@
         "created": "2016-03-20T00:33:02.414Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 7,
+        "order": 9,
         "modified": "2016-04-18T01:08:47.290Z",
         "status": "published"
       },
       {
-        "_id": "56edefbee6dcdbb570000029",
-        "old_id": "56edefbe952f68b570a025dc",
+        "_id": "56edefbee6dcdbb57000002c",
+        "old_id": "56edefbe952f68b570a025df",
         "bucket": "56edeedd694d9a5e6f000031",
-        "slug": "brand-hatchery-holiday-card",
-        "title": "The Brand Hatchery Holiday Card",
-        "content": "<a href=\"http://brandhatchery.com/hohoho/2013/\" target=\"_blank\"><img src=\"https://cosmicjs.com/uploads/91f87ff0-04e6-11e6-8e50-dd42082f9224-Screen-Shot-2014-02-12-at-9.27.57-PM.png\"></a>This was a really fun project that lets the user whack a moving pinata to get the goodies inside. It is built from scratch with HTML5, JQuery and is responsive down to mobile. Check it out!\r\n\r\n<a href=\"http://brandhatchery.com/hohoho/2013/\">http://brandhatchery.com/hohoho/2013/</a>.",
+        "slug": "nimbix",
+        "title": "Nimbix",
+        "content": "This responsive website built for <a href=\"http://nimbix.net\" target=\"_blank\">Nimbix</a>, a cloud computing company, was built using a modified theme on the WordPress CMS. It turned out to be pretty cool and allows for some easy content population on the backend using totally customizable content spans.  Check it out at <a href=\"http://nimbix.net\" target=\"_blank\">Nimbix.net</a>.\r\n\r\n<a href=\"http://nimbix.net\" target=\"_blank\"><img src=\"https://cosmicjs.com/uploads/3c2ae760-04e7-11e6-8e50-dd42082f9224-Screen-Shot-2014-10-15-at-9.52.59-PM.jpg\" alt=\"Screen-Shot-2014-10-15-at-9.52.59-PM\" class=\"alignnone size-full wp-image-686\"></a>",
         "metafields": [
           {
             "edit": 1,
-            "value": "41aa00d0-04de-11e6-8e50-dd42082f9224-ball.png",
+            "value": "32d01500-04dd-11e6-8e50-dd42082f9224-Screen Shot 2016-04-17 at 3.44.14 PM.png",
             "key": "thumb",
             "title": "Thumb",
             "type": "file",
@@ -1138,11 +1309,11 @@
           }
         ],
         "type_slug": "work",
-        "created": "2016-03-20T00:33:02.456Z",
+        "created": "2016-03-20T00:33:02.459Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 8,
-        "modified": "2016-04-17T21:55:25.862Z",
+        "order": 9,
+        "modified": "2016-04-17T21:56:37.267Z",
         "status": "published"
       },
       {
@@ -1199,41 +1370,8 @@
         "created": "2016-03-20T00:33:02.413Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 8,
+        "order": 10,
         "modified": "2016-04-17T17:51:01.471Z",
-        "status": "published"
-      },
-      {
-        "_id": "56edefbee6dcdbb57000002c",
-        "old_id": "56edefbe952f68b570a025df",
-        "bucket": "56edeedd694d9a5e6f000031",
-        "slug": "nimbix",
-        "title": "Nimbix",
-        "content": "This responsive website built for <a href=\"http://nimbix.net\" target=\"_blank\">Nimbix</a>, a cloud computing company, was built using a modified theme on the WordPress CMS. It turned out to be pretty cool and allows for some easy content population on the backend using totally customizable content spans.  Check it out at <a href=\"http://nimbix.net\" target=\"_blank\">Nimbix.net</a>.\r\n\r\n<a href=\"http://nimbix.net\" target=\"_blank\"><img src=\"https://cosmicjs.com/uploads/3c2ae760-04e7-11e6-8e50-dd42082f9224-Screen-Shot-2014-10-15-at-9.52.59-PM.jpg\" alt=\"Screen-Shot-2014-10-15-at-9.52.59-PM\" class=\"alignnone size-full wp-image-686\"></a>",
-        "metafields": [
-          {
-            "edit": 1,
-            "value": "32d01500-04dd-11e6-8e50-dd42082f9224-Screen Shot 2016-04-17 at 3.44.14 PM.png",
-            "key": "thumb",
-            "title": "Thumb",
-            "type": "file",
-            "children": false
-          },
-          {
-            "edit": 1,
-            "value": "<p><br></p>",
-            "key": "excerpt",
-            "title": "Excerpt",
-            "type": "html-textarea",
-            "children": false
-          }
-        ],
-        "type_slug": "work",
-        "created": "2016-03-20T00:33:02.459Z",
-        "user_id": "5357ef811693be2118000001",
-        "options": null,
-        "order": 9,
-        "modified": "2016-04-17T21:56:37.267Z",
         "status": "published"
       },
       {
@@ -1290,7 +1428,7 @@
         "created": "2016-03-20T00:33:02.411Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 9,
+        "order": 11,
         "modified": "2016-04-17T18:26:34.043Z",
         "status": "published"
       },
@@ -1356,7 +1494,7 @@
         "created": "2016-03-20T00:33:02.411Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 10,
+        "order": 12,
         "modified": "2016-04-17T23:19:05.595Z",
         "status": "published"
       },
@@ -1414,7 +1552,7 @@
         "created": "2016-03-20T00:33:02.410Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 11,
+        "order": 13,
         "modified": "2016-04-17T22:47:32.607Z",
         "status": "published"
       },
@@ -1472,7 +1610,7 @@
         "created": "2016-03-20T00:33:02.409Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 12,
+        "order": 14,
         "modified": "2016-04-17T18:28:08.704Z",
         "status": "published"
       },
@@ -1530,7 +1668,7 @@
         "created": "2016-03-20T00:33:02.408Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 13,
+        "order": 15,
         "modified": "2016-04-17T18:28:45.621Z",
         "status": "published"
       },
@@ -1588,7 +1726,7 @@
         "created": "2016-03-20T00:33:02.408Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 14,
+        "order": 16,
         "modified": "2016-04-17T18:29:31.539Z",
         "status": "published"
       },
@@ -1646,7 +1784,7 @@
         "created": "2016-03-20T00:33:02.407Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 15,
+        "order": 17,
         "modified": "2016-04-17T18:30:06.362Z",
         "status": "published"
       },
@@ -1704,7 +1842,7 @@
         "created": "2016-03-20T00:33:02.406Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 16,
+        "order": 18,
         "modified": "2016-04-17T18:30:35.140Z",
         "status": "published"
       },
@@ -1762,7 +1900,7 @@
         "created": "2016-03-20T00:33:02.406Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 17,
+        "order": 19,
         "modified": "2016-04-17T18:30:57.251Z",
         "status": "published"
       },
@@ -1828,7 +1966,7 @@
         "created": "2016-03-20T00:33:02.405Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 18,
+        "order": 20,
         "modified": "2016-04-17T23:21:04.059Z",
         "status": "published"
       },
@@ -1886,7 +2024,7 @@
         "created": "2016-03-20T00:33:02.404Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 19,
+        "order": 21,
         "modified": "2016-04-17T18:31:51.643Z",
         "status": "published"
       },
@@ -1944,7 +2082,7 @@
         "created": "2016-03-20T00:33:02.404Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 20,
+        "order": 22,
         "modified": "2016-04-17T18:32:39.962Z",
         "status": "published"
       },
@@ -2002,7 +2140,7 @@
         "created": "2016-03-20T00:33:02.402Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 21,
+        "order": 23,
         "modified": "2016-04-17T18:33:05.742Z",
         "status": "published"
       },
@@ -2060,7 +2198,7 @@
         "created": "2016-03-20T00:33:02.401Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 22,
+        "order": 24,
         "modified": "2016-04-17T18:39:57.255Z",
         "status": "published"
       },
@@ -2118,7 +2256,7 @@
         "created": "2016-03-20T00:33:02.400Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 23,
+        "order": 25,
         "modified": "2016-04-17T18:33:59.179Z",
         "status": "published"
       },
@@ -2176,7 +2314,7 @@
         "created": "2016-03-20T00:33:02.399Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 24,
+        "order": 26,
         "modified": "2016-04-17T18:34:27.563Z",
         "status": "published"
       },
@@ -2234,7 +2372,7 @@
         "created": "2016-03-20T00:33:02.399Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 25,
+        "order": 27,
         "modified": "2016-04-17T18:34:49.614Z",
         "status": "published"
       },
@@ -2292,7 +2430,7 @@
         "created": "2016-03-20T00:33:02.398Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 26,
+        "order": 28,
         "modified": "2016-04-17T18:35:12.800Z",
         "status": "published"
       },
@@ -2350,7 +2488,7 @@
         "created": "2016-03-20T00:33:02.366Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 27,
+        "order": 29,
         "modified": "2016-04-17T18:35:29.512Z",
         "status": "published"
       },
@@ -2408,7 +2546,7 @@
         "created": "2016-03-20T00:33:02.365Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 28,
+        "order": 30,
         "modified": "2016-04-17T18:33:29.924Z",
         "status": "published"
       },
@@ -2466,7 +2604,7 @@
         "created": "2016-03-20T00:33:02.364Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 29,
+        "order": 31,
         "modified": "2016-04-17T18:36:17.897Z",
         "status": "published"
       },
@@ -2524,7 +2662,7 @@
         "created": "2016-03-20T00:33:02.363Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 30,
+        "order": 32,
         "modified": "2016-04-17T18:36:35.725Z",
         "status": "published"
       },
@@ -2582,7 +2720,7 @@
         "created": "2016-03-20T00:33:02.359Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 31,
+        "order": 33,
         "modified": "2016-04-17T18:37:39.577Z",
         "status": "published"
       },
@@ -2640,7 +2778,7 @@
         "created": "2016-03-20T00:33:02.412Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 32,
+        "order": 34,
         "modified": "2016-04-17T18:39:15.356Z",
         "status": "published"
       },
@@ -2706,7 +2844,7 @@
         "created": "2016-03-20T00:33:02.362Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 33,
+        "order": 35,
         "modified": "2016-04-18T01:09:23.800Z",
         "status": "published"
       },
@@ -2764,7 +2902,7 @@
         "created": "2016-03-20T00:33:02.363Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 34,
+        "order": 36,
         "modified": "2016-04-17T18:36:53.916Z",
         "status": "published"
       },
@@ -2822,7 +2960,7 @@
         "created": "2016-03-20T00:33:02.360Z",
         "user_id": "5357ef811693be2118000001",
         "options": null,
-        "order": 35,
+        "order": 37,
         "modified": "2016-04-17T18:37:56.628Z",
         "status": "published"
       }
@@ -3238,6 +3376,39 @@
         "type": "image/png",
         "bucket": "56edeedd694d9a5e6f000031",
         "created": "2016-04-17T22:57:30.516Z",
+        "folder": null,
+        "location": "https://cosmicjs.com/uploads"
+      },
+      {
+        "_id": "57203662303fc3c437000003",
+        "name": "cdd0c5f0-0c2a-11e6-8b51-a94dba6d5176-freedom.png",
+        "original_name": "freedom.png",
+        "size": 263401,
+        "type": "image/png",
+        "bucket": "56edeedd694d9a5e6f000031",
+        "created": "2016-04-27T03:47:46.267Z",
+        "folder": null,
+        "location": "https://cosmicjs.com/uploads"
+      },
+      {
+        "_id": "576ad141229db02131000075",
+        "name": "9e7da2b0-38a2-11e6-b9c1-cd06b34cd6eb-17475736.png",
+        "original_name": "17475736.png",
+        "size": 45169,
+        "type": "image/png",
+        "bucket": "56edeedd694d9a5e6f000031",
+        "created": "2016-06-22T17:56:17.676Z",
+        "folder": null,
+        "location": "https://cosmicjs.com/uploads"
+      },
+      {
+        "_id": "576ad199229db02131000076",
+        "name": "d2f15eb0-38a2-11e6-b9c1-cd06b34cd6eb-state-of-chaos.png",
+        "original_name": "state-of-chaos.png",
+        "size": 1254888,
+        "type": "image/png",
+        "bucket": "56edeedd694d9a5e6f000031",
+        "created": "2016-06-22T17:57:45.707Z",
         "folder": null,
         "location": "https://cosmicjs.com/uploads"
       }
