@@ -21,9 +21,9 @@
           </div>
         </div>
       {{/ page.is_post }}
-      {{# post.metafield.hero.value }}
-        <img style="max-width:100%; margin-bottom: 20px" src="{{ post.metafield.hero.imgix_url }}?w=900" alt="" />
-      {{/ post.metafield.hero.value }}
+      {{# page.metafield.hero.value }}
+        <img style="max-width:100%; margin-bottom: 20px" src="{{ page.metafield.hero.imgix_url }}?w=900" alt="" />
+      {{/ page.metafield.hero.value }}
       {{{ page.content }}}
       {{# page.is_post }}
         <div id="disqus_thread" class="shorti mt-40"></div>
