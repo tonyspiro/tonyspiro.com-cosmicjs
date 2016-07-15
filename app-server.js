@@ -16,7 +16,7 @@ app.use((req, res, next) => {
   if (req.url === '/favicon.ico')
     return res.end()
   // Redirect to canonical url
-  if (req.headers.host === 'www.tonyspiro.com')
+  if (req.headers.host !== 'tonyspiro.com')
     return res.redirect('http://tonyspiro.com' + req.url)
   // Set global valiables
   res.locals.year = new Date().getFullYear()
